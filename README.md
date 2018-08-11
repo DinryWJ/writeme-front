@@ -1,20 +1,16 @@
 # writeme-font
 ## 安装
-1.安装node.js  
-2.cmd运行：
->npm install -g @vue/cli
+1.安装node.js
+2.npm使用淘宝镜像
+3.cmd运行：
+>cnpm install -g @vue/cli
+
 ---
-3.以下
+4.安装依赖
+>cnpm install
+5.运行
+>cnpm run serve
 
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
 
 
 
