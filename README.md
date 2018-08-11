@@ -1,13 +1,22 @@
 # writeme-font
 ## 安装
 1.安装node.js  
-2.npm使用淘宝镜像  
-3.cmd运行：  
->cnpm install -g @vue/cli  
+2.npm使用淘宝镜像(cmd运行)  
+```
+    npm install -g cnpm --registry=https://registry.npm.taobao.org  
+```
+3.安装vue3  
+```
+    cnpm install -g @vue/cli  
+```
 4.安装依赖  
->cnpm install  
+```
+    cnpm install  
+```
 5.运行  
->cnpm run serve  
+```
+    cnpm run serve  
+```
 
 
 
