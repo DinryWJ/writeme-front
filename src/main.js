@@ -13,7 +13,7 @@ new Vue({
   render: h => h(App)
 }).$mount('#app')
 
-//全局调用cookie方法 this.$cookieStore.addCookie( 'name' , name)
+//全局调用cookie方法 this.$cookieStore.addCookie( 'name' , 1)
 Vue.prototype.$cookieStore = {
   addCookie,
   getCookie,
