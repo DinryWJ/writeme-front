@@ -1,9 +1,10 @@
 <template>
 <div> 
     <!-- 导航栏 -->
-    <p>
-        <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-        <el-menu-item index="1">首页</el-menu-item>
+    <nav>
+        <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect" >
+        
+        <el-menu-item index="1"><img alt="Vue logo" :src="icon" style="height:100%"/></el-menu-item>
         <el-menu-item index="2" v-if="loginStatus == true">关注</el-menu-item>
         <el-menu-item index="3" v-if="loginStatus == true">消息</el-menu-item>
         <el-menu-item index="4">
@@ -25,7 +26,7 @@
         <el-menu-item index="8">写文章</el-menu-item>
 
         </el-menu>
-    </p> 
+    </nav> 
     <!-- 路由 -->
     <router-view></router-view>
     <!-- 消息提示 -->
@@ -42,11 +43,20 @@
     </el-dialog>
 </div>
 </template>
+<style scoped>
+   nav{
+    padding-left: 20%
+
+  } 
+</style>
 
 <script>
+
+import logo from '@/assets/logo.png'
 export default {
   data() {
     return {
+      icon:logo,
       path: [
         "",
         "/",
