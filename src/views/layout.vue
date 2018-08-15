@@ -1,34 +1,48 @@
 <template>
 <div> 
-    <!-- 导航栏 -->
-    <nav>
-        <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect" >
-        
-        <el-menu-item index="1"><img alt="Vue logo" :src="icon" style="height:100%"/></el-menu-item>
-        <el-menu-item index="2" v-if="loginStatus == true">关注</el-menu-item>
-        <el-menu-item index="3" v-if="loginStatus == true">消息</el-menu-item>
-        <el-menu-item index="4">
-            <el-input placeholder="请输入内容" v-model="searchKey" class="input-with-select">
-                <el-button slot="append" icon="el-icon-search" circle @click="search(searchKey)"></el-button>
-            </el-input>
-        </el-menu-item>
+    <el-row>
+      <el-col :span="2"><div class="grid-content"></div></el-col>
+      <el-col :span="20">
+        <div class="grid-content">
+          <!-- 导航栏 -->
+          <nav>
+              <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect" >
+              
+              <el-menu-item class="menuItem" index="1"><img alt="Vue logo" :src="icon" style="height:100%" /></el-menu-item>
+              <el-menu-item class="menuItem" index="2" v-if="loginStatus == true">关注</el-menu-item>
+              <el-menu-item class="menuItem" index="3" v-if="loginStatus == true">消息</el-menu-item>
+              <el-menu-item class="menuItem" index="4">
+                  <el-input placeholder="请输入内容" v-model="searchKey" class="input-with-select">
+                      <el-button slot="append" icon="el-icon-search" circle @click="search(searchKey)"></el-button>
+                  </el-input>
+              </el-menu-item>
 
-        <el-menu-item index="5" v-if="loginStatus != true">登录</el-menu-item>
-        <el-menu-item index="6" v-if="loginStatus != true">注册</el-menu-item>
-         <el-submenu index="7" v-if="loginStatus == true">
-            <template slot="title">我的工作台</template>
-            <el-menu-item index="7-1">我的主页</el-menu-item>
-            <el-menu-item index="7-2">收藏的文章</el-menu-item>
-            <el-menu-item index="7-3">喜欢的文章</el-menu-item>
-            <el-menu-item index="7-4">设置</el-menu-item>
-            <el-menu-item index="7-5">退出</el-menu-item>
-        </el-submenu>
-        <el-menu-item index="8">写文章</el-menu-item>
+              <el-menu-item class="menuItem" index="5" v-if="loginStatus != true">登录</el-menu-item>
+              <el-menu-item class="menuItem" index="6" v-if="loginStatus != true">注册</el-menu-item>
+              <el-submenu class="menuItem" index="7" v-if="loginStatus == true">
+                  <template slot="title">我的工作台</template>
+                  <el-menu-item index="7-1">我的主页</el-menu-item>
+                  <el-menu-item index="7-2">收藏的文章</el-menu-item>
+                  <el-menu-item index="7-3">喜欢的文章</el-menu-item>
+                  <el-menu-item index="7-4">设置</el-menu-item>
+                  <el-menu-item index="7-5">退出</el-menu-item>
+              </el-submenu>
+              <el-menu-item index="8" class="menuItem">写文章</el-menu-item>
 
-        </el-menu>
-    </nav> 
+              </el-menu>
+          </nav> 
+        </div>
+      </el-col>
+      <el-col :span="2"><div class="grid-content"></div></el-col>
+    </el-row>
+
     <!-- 路由 -->
-    <router-view></router-view>
+    <el-row :gutter="20">
+      <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
+      <el-col :span="16"><div class="grid-content"><router-view></router-view></div></el-col>
+      <el-col :span="4"><div class="grid-content bg-purple"></div></el-col>
+    </el-row>
+
     <!-- 消息提示 -->
     <el-dialog
       title="提示"
@@ -44,10 +58,35 @@
 </div>
 </template>
 <style scoped>
-   nav{
-    padding-left: 20%
-
-  } 
+  .menuItem{
+    padding: 0 60px;
+  }
+  .el-row {
+      margin-bottom: 20px;
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+    .el-col {
+      border-radius: 4px;
+    }
+    .bg-purple-dark {
+      background: #99a9bf;
+    }
+    .bg-purple {
+      background: #d3dce6;
+    }
+    .bg-purple-light {
+      background: #e5e9f2;
+    }
+    .grid-content {
+      border-radius: 4px;
+      min-height: 36px;
+    }
+    .row-bg {
+      padding: 10px 0;
+      background-color: #f9fafc;
+    }
 </style>
 
 <script>
