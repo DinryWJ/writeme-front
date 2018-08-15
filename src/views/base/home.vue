@@ -79,8 +79,11 @@
   float: right;
 }
 .image {
-  height: 100%;
+  height: 150px;
+  width: 150px;
+  padding-top: 30px;
   display: block;
+  margin:0 auto;
 }
 .clearfix:before,
 .clearfix:after {
