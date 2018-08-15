@@ -1,26 +1,41 @@
 <template>
 <div class = "note" :style = "note">
-<div :span="9 " type="border-card" class="registerFrame">
-
-    <el-form :model="form" status-icon ref="form" label-width="100px" class="demo-ruleForm">
-     <el-col :span="18 " style="float:none;margin-lef:10%">
-    <el-form-item label="用户名" style="padding-top:20px">
-        <el-input v-model="form.name"></el-input>
+  <div class="registerFrame">
+   <el-card class="box-card">
+     <div  class="formGroup">
+    <el-form :model="form" status-icon ref="form" class="demo-ruleForm">
+     <el-col :span="24">
+       <el-form-item>
+            <img src="../../assets/bg1.jpg" class="image" >
+          </el-form-item>
+          <el-form-item>
+            <h2 style="line-height:10px">进入Write Me</h2>
+          </el-form-item>
+    <el-form-item >
+        <el-input style="width:80%;margin-buttom:0px" placeholder="用户名" v-model="form.name"></el-input>
     </el-form-item>
-    <el-form-item label="密码">
-      <el-input type="password" v-model="form.pass" auto-complete="off"></el-input>
+    <el-form-item >
+      <el-input  style="width:80%;margin-buttom:0px" placeholder="密码" type="password" v-model="form.pass" auto-complete="off"></el-input>
     </el-form-item>
-    <el-form-item label="再次输入密码">
-      <el-input type="password" v-model="form.repass" auto-complete="off"></el-input>
+    <el-form-item >
+      <el-input style="width:80%" type="password" placeholder="再次输入密码" v-model="form.repass" auto-complete="off"></el-input>
     </el-form-item>
-    <el-form-item>
-        <el-button style="width:100%" type="primary" @click="submitForm('form')">注册</el-button>
+    <el-form-item :gutter="50">
+        <el-button style="width:80%;background:black;color:white" type="primary" @click="submitForm('form')">注册</el-button>
     </el-form-item>
+    <el-col :offset="6">
+          <el-form-item >
+              <a rel="register" href="http://localhost:8080/#/login">已注册/登录</a>
+          </el-form-item>
+        </el-col>
      </el-col>
     </el-form>
           
-    <el-col :span="9 "><div class="grid-content bg-purple"></div></el-col>
+  <el-col :span="9 "><div class="grid-content bg-purple"></div></el-col>
+     </div>
+ </el-card>
 </div>  
+  
 </div>
 </template>
 <style>
@@ -30,13 +45,30 @@ body{
   width: 100%;
   height: 100%;
 }
-   
+    img{
+     width: 200px;
+     height: 100px;
+     padding-top: 20px;
+   }
+   .formGroup{
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+.demo-ruleForm{
+   width: 100%;
+  height: 100%;
+  text-align: center;
+}
+.el-input__inner{
+  border:1px solid black;
+}
   .registerFrame{
     border-radius: 4px;
     margin: 0 auto;
-    margin-top: 10%;
+    margin-top: 7%;
     width:400px;
-    background:rgb(247, 244, 244,0.8);
+    height: 450px;
     padding-bottom: 20px;
   }
  
