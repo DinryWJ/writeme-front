@@ -1,6 +1,6 @@
 /*请求 基本信息配置*/
 import Qs from 'qs'
-const baseURL ='http://localhost:8090';
+const baseURL ='http://localhost:8762';
 const objBase = {
 	//请求的接口，在请求的时候，如axios.get(url,config);这里的url会覆盖掉config中的url
 	url: '/get',

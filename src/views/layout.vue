@@ -37,7 +37,7 @@
     </el-row>
 
     <!-- 路由 -->
-    <el-row :gutter="20">
+    <el-row >
       <el-col :span="4"><div class="grid-content"></div></el-col>
       <el-col :span="16"><div class="grid-content"><router-view></router-view></div></el-col>
       <el-col :span="4"><div class="grid-content"></div></el-col>
@@ -58,44 +58,43 @@
 </div>
 </template>
 <style scoped>
-  .menuItem{
-    padding: 0 60px;
+.menuItem {
+  padding: 0 60px;
+}
+.el-row {
+  margin-bottom: 20px;
+  &:last-child {
+    margin-bottom: 0;
   }
-  .el-row {
-      margin-bottom: 20px;
-      &:last-child {
-        margin-bottom: 0;
-      }
-    }
-    .el-col {
-      border-radius: 4px;
-    }
-    .bg-purple-dark {
-      background: #99a9bf;
-    }
-    .bg-purple {
-      background: #d3dce6;
-    }
-    .bg-purple-light {
-      background: #e5e9f2;
-    }
-    .grid-content {
-      border-radius: 4px;
-      min-height: 36px;
-    }
-    .row-bg {
-      padding: 10px 0;
-      background-color: #f9fafc;
-    }
+}
+.el-col {
+  border-radius: 4px;
+}
+.bg-purple-dark {
+  background: #99a9bf;
+}
+.bg-purple {
+  background: #d3dce6;
+}
+.bg-purple-light {
+  background: #e5e9f2;
+}
+.grid-content {
+  border-radius: 4px;
+  min-height: 36px;
+}
+.row-bg {
+  padding: 10px 0;
+  background-color: #f9fafc;
+}
 </style>
 
 <script>
-
-import logo from '@/assets/logo.png'
+import logo from "@/assets/logo.png";
 export default {
   data() {
     return {
-      icon:logo,
+      icon: logo,
       path: [
         "",
         "/",
@@ -139,7 +138,8 @@ export default {
     handleSelect(key, keyPath) {
       //console.log(key);
       //定义路由
-      if (key.substr(0, 1) == "7") { //我的账号路由
+      if (key.substr(0, 1) == "7") {
+        //我的账号路由
         if (key.substr(key.length - 1) == 5) {
           this.$cookieStore.delCookie("token");
           this.loginStatus = false;
@@ -147,20 +147,19 @@ export default {
         } else {
           this.$router.push(this.mypath[key.substr(key.length - 1)]);
         }
-      } else if (key != 4) {//除搜索
+      } else if (key != 4) {
+        //除搜索
         //未登录点击写文章事件
         if (key == 8 && this.loginStatus == false) {
-          this.dialogVisible =true;
-        }else{
+          this.dialogVisible = true;
+        } else {
           this.$router.push(this.path[key]);
         }
-        
       }
     },
-    goLogin(){
+    goLogin() {
       this.$router.push("/login");
     }
-
   }
 };
 </script>

@@ -6,7 +6,7 @@
     <el-form :model="form" status-icon ref="form" class="demo-ruleForm">
      <el-col :span="24">
        <el-form-item>
-            <img src="../../assets/bg1.jpg" class="image" >
+            <!-- <img src="../../assets/bg1.jpg" class="image" > -->
           </el-form-item>
           <el-form-item>
             <h2 style="line-height:10px">进入Write Me</h2>
@@ -25,7 +25,7 @@
     </el-form-item>
     <el-col :offset="6">
           <el-form-item >
-              <a rel="register" href="http://localhost:8080/#/login">已注册/登录</a>
+              <router-link to="/login">已注册/登录</router-link>
           </el-form-item>
         </el-col>
      </el-col>
@@ -38,7 +38,7 @@
   
 </div>
 </template>
-<style>
+<style scoped>
 body{
   margin:0 ;
   padding: 0;
@@ -85,7 +85,6 @@ export default {
                 left:"0px",
                 width: "100%",
                 height:"100%",
-                backgroundImage: "url(" + require("../../assets/bg1.jpg") + ")",
                 backgroundSize: "100% 100%",
                 backgroundRepeat: "no-repeat",
                 
