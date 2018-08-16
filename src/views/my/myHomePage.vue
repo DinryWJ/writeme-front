@@ -91,9 +91,9 @@
             <el-tab-pane label="关注我的人">
 
             </el-tab-pane>
-            <el-tab-pane label="收藏">
+            <!-- <el-tab-pane label="收藏">
 
-            </el-tab-pane>
+            </el-tab-pane> -->
             </el-tabs>    
         </div></el-col>
         <el-col :span="8"><div class="grid-content">
