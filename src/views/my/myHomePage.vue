@@ -8,7 +8,7 @@
                 <br/>
                 <el-row :gutter="20">
                     <el-col :span="6" :offset="18"><div class="grid-content">
-                        <el-button type="primary">上传新头像<i class="el-icon-upload el-icon--right"></i></el-button>  
+                        <el-button type="primary"  @click="dialogVisible = true">上传新头像<i class="el-icon-upload el-icon--right"></i></el-button>  
                     </div></el-col>
                 </el-row>
           </el-header>
@@ -26,6 +26,11 @@
             <el-tab-pane label="文章">
                     <!-- 文章列表 -->
                     <h2>我的文章</h2>
+                    <el-radio-group v-model="status" size="small" style="float:right">
+                      <el-radio-button label="1">已发布</el-radio-button>
+                      <el-radio-button label="0">未发布</el-radio-button>
+                    </el-radio-group>
+                    <br>
                     <br/>
                     <div :span="8" v-for="(o, index) in 6" :key="o" :offset="index > 0 ? 2 : 0">
                     <el-card :body-style="{ padding: '0px' }" shadow="hover">
@@ -114,9 +119,30 @@
             </el-card>
         </div></el-col>
     </el-row>
+    <el-dialog
+      title="提示"
+      :visible.sync="dialogVisible"
+      width="30%"
+    >
+      <el-upload
+        class="avatar-uploader"
+        action="http://localhost:8762/upload/upload2"
+        :show-file-list="false"
+        :on-success="handleAvatarSuccess"
+        :before-upload="beforeAvatarUpload">
+        <img v-if="imageUrl" :src="imageUrl" class="avatar">
+        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+      </el-upload>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
 </div>
 </template>
-<style>
+
+<style scoped>
 .followBtn {
   width: 150px;
   display: block;
@@ -142,6 +168,30 @@ p {
   display: -webkit-box;
   -webkit-box-orient: vertical;
 }
+/*上传 */
+.avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  } 
 /* 卡片 */
 .time {
   font-size: 13px;
@@ -213,7 +263,10 @@ export default {
       currentDate: new Date(),
       selectedTag: "0",
       currentPage: 4,
-      total: 120
+      total: 120,
+      status: '1',
+      dialogVisible: false,
+      imageUrl: ''
     };
   },
   mounted() {
@@ -231,7 +284,25 @@ export default {
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
+    },
+    //上传
+    handleAvatarSuccess(res, file) {
+      console.log(file)
+      this.imageUrl = URL.createObjectURL(file.raw);
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === 'image/jpeg';
+      const isLt2M = file.size / 1024 / 1024 < 1;
+
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 格式!');
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 1MB!');
+      }
+      return isJPG && isLt2M;
     }
+  
   }
 };
 </script>
