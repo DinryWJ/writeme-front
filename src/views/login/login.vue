@@ -78,7 +78,6 @@ img {
  
 <script>
 export default {
-  name: "登录",
   data() {
     return {
       logining: false,

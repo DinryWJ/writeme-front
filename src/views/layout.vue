@@ -19,7 +19,7 @@
 
               <el-menu-item class="menuItem" index="5" v-if="loginStatus != true">登录</el-menu-item>
               <el-menu-item class="menuItem" index="6" v-if="loginStatus != true">注册</el-menu-item>
-              <el-submenu class="menuItem" index="7" v-if="loginStatus == true">
+              <el-submenu class="menuItem" index="7" v-if="loginStatus == true" style="float:right">
                   <template slot="title">我的工作台</template>
                   <el-menu-item index="7-1">我的主页</el-menu-item>
                   <el-menu-item index="7-2">收藏的文章</el-menu-item>
@@ -27,7 +27,7 @@
                   <el-menu-item index="7-4">设置</el-menu-item>
                   <el-menu-item index="7-5">退出</el-menu-item>
               </el-submenu>
-              <el-menu-item index="8" class="menuItem">写文章</el-menu-item>
+              <el-menu-item index="8" class="menuItem" style="float:right">写文章</el-menu-item>
 
               </el-menu>
           </nav> 
@@ -143,7 +143,7 @@ export default {
         if (key.substr(key.length - 1) == 5) {
           this.$cookieStore.delCookie("token");
           this.loginStatus = false;
-          this.$router.push("/");
+          this.$router.push("/login");
         } else {
           this.$router.push(this.mypath[key.substr(key.length - 1)]);
         }

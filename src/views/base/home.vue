@@ -3,11 +3,11 @@
 
     <el-row :gutter="20">
       <el-col :span="16">
-        <div class="userOperator">
+        <div v-if="loginStatus==true" class="userOperator">
           <h2>快速开始</h2>
           <br/>
-          <el-button type="danger" icon="el-icon-edit" round>写文章</el-button>
-          <el-button type="warning" icon="el-icon-edit" round>写想法</el-button>
+          <el-button type="danger" icon="el-icon-edit" @click="dowrite()" round>写文章</el-button>
+          <el-button type="warning" icon="el-icon-edit" @click="dialogVisible=true" round>写想法</el-button>
           <br/>
         </div>
 
@@ -55,14 +55,65 @@
       </div></el-col>
     </el-row>
 
+
+    <!-- 写想法 -->
+    <el-dialog title="新想法" :visible.sync="dialogVisible">
+        <el-input
+          type="textarea"
+          :rows="2"
+          placeholder="请输入内容"
+          maxlength="100"
+          v-model="textarea">
+        </el-input>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
+
+<script>
+// @ is an alias to /src
+// import HelloWorld from '@/components/HelloWorld.vue'
+import logo from "@/assets/logo.png";
+export default {
+  data() {
+    return {
+      pic: logo,
+      currentDate: new Date(),
+      loginStatus: false,
+      dialogVisible: false,
+      textarea:''
+    };
+  },
+  mounted() {
+    this.init();
+  },
+  methods: {
+    init() {
+      let name = this.$cookieStore.getCookie("token");
+      if (name != null) {
+        this.loginStatus = true;
+      } else {
+        this.loginStatus = false;
+      }
+    },
+    dowrite(){
+      this.$router.push('/write');
+    },
+    domind(){
+
+    }
+  }
+};
+</script>
 <style scoped>
-.userOperator{
+.userOperator {
   padding: 20px 0;
   border: 1px solid rgb(252, 252, 252);
 }
-.imgbtn{
+.imgbtn {
   width: 100%;
 }
 /* 卡片 */
@@ -83,7 +134,7 @@
   width: 150px;
   padding-top: 30px;
   display: block;
-  margin:0 auto;
+  margin: 0 auto;
 }
 .clearfix:before,
 .clearfix:after {
@@ -144,22 +195,3 @@ p {
   background-color: #f9fafc;
 }
 </style>
-<script>
-// @ is an alias to /src
-// import HelloWorld from '@/components/HelloWorld.vue'
-import logo from "@/assets/logo.png";
-export default {
-  data() {
-    return {
-      pic: logo,
-      currentDate: new Date()
-    };
-  },
-  mounted() {
-    this.init();
-  },
-  methods: {
-    init() {}
-  }
-};
-</script>

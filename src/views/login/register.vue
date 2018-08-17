@@ -75,7 +75,6 @@ body{
 </style>
 <script>
 export default {
- name: '注册',
     data() {
         return {
             logining : false,
