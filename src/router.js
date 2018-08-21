@@ -43,11 +43,6 @@ const routes = [{
     component: () =>
       import ('./views/my/myCollection.vue')
   }, {
-    path: '/myLike',
-    name: 'myLike',
-    component: () =>
-      import ('./views/my/myLike.vue')
-  }, {
     path: '/setting',
     name: 'setting',
     component: () =>

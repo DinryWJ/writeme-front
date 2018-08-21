@@ -276,7 +276,7 @@ export default {
     init() {},
     // 标签页方法
     tabClick(targetName) {
-      // console.log(targetName);
+      console.log(targetName.index);
     },
     //分页方法
     handleSizeChange(val) {
