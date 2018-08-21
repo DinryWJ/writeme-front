@@ -46,8 +46,19 @@ const getMissionListByClassify = (fristClassify, secondClassify, pageNo, pageSiz
 
 /*更新宣教信息*/
 const updateMission = (token, mission) => post2('/mission/updateMission?token=' + token, mission)
+
+/*登陆*/
+const login =(name,pass) => post('/login/login',name,pass)
+/*注册*/
+const register = (parameters) =>post('/user/register',parameters)
+/*发布文章*/
+const publish = (token,title,content,corpusId) =>post('/article/addArticle',token,title,content,corpusId)
 export default {
   getMissionListByClassify,
 
-  updateMission
+  updateMission,
+
+  login,
+  register,
+  publish
 }

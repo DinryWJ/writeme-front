@@ -20,7 +20,7 @@
           </el-form-item>
         
         <el-form-item :gutter="50">
-            <el-button style="width:80%;background:black;color:white" @click="submitForm('form')" round>登录</el-button>
+            <el-button style="width:80%;background:black;color:white" @click="submitForm()" round>登录</el-button>
         </el-form-item>
         <el-col :offset="6">
           <el-form-item >
@@ -38,6 +38,7 @@
 </div>
 </div>
 </template>
+
 <style scoped>
 body {
   margin: 0;
@@ -77,6 +78,7 @@ img {
  
  
 <script>
+import axion from "@/util/http_url.js"; //接口文件
 export default {
   data() {
     return {
@@ -97,21 +99,21 @@ export default {
     };
   },
   methods: {
-    submitForm(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          //TODO 登录操作。。。
-
-          this.$cookieStore.addCookie("token", "token");
+    submitForm() {
+      axion
+        .login({
+          account: this.form.name,
+          password: this.form.pass
+        })
+        .then(d => {
+          if (d.data.code != 200) {
+            this.$alert(d.data.type, "提示", {});
+            return;
+          }
+          let currentToken = d.data.data.token;
+          this.$cookieStore.addCookie("token", currentToken);
           this.$router.push("/");
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
-    },
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
+        });
     }
   }
 };

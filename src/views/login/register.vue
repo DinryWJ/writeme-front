@@ -21,7 +21,7 @@
       <el-input style="width:80%" type="password" placeholder="再次输入密码" v-model="form.repass" auto-complete="off"></el-input>
     </el-form-item>
     <el-form-item :gutter="50">
-        <el-button style="width:80%;background:black;color:white" type="primary" @click="submitForm('form')">注册</el-button>
+        <el-button style="width:80%;background:black;color:white" type="primary" @click="submitForm()">注册</el-button>
     </el-form-item>
     <el-col :offset="6">
           <el-form-item >
@@ -74,6 +74,7 @@ body{
  
 </style>
 <script>
+import axion from "@/util/http_url.js"; //接口文件
 export default {
     data() {
         return {
@@ -96,19 +97,20 @@ export default {
     };
   },
   methods: {
-    submitForm(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          //注册操作。。。
-          
+    submitForm() {
+      axion.register({
+        account:this.form.name,
+        password:this.form.pass,
+        repassword:this.form.repass
+      }).then(d => {
+          if (d.data.code != 200) {
+            this.$alert(d.data.type, "提示", {});
+            return;
+          }
+          this.$alert("注册成功", "提示", {});
           this.$router.push('/login');
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
+        });
     }
-
   }
 };
 </script>
