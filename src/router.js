@@ -11,56 +11,61 @@ const routes = [{
     path: '/',
     name: "home",
     component: () =>
-      import ('./views/base/home.vue')
+      import('./views/base/home.vue')
   }, {
     path: '/:searchkey/search',
     name: 'search',
     component: () =>
-      import ('./views/base/search.vue')
+      import('./views/base/search.vue')
   }, {
     path: '/follow',
     name: 'follow',
     component: () =>
-      import ('./views/base/follow.vue')
+      import('./views/base/follow.vue')
   }, {
     path: '/message',
     name: 'message',
     component: () =>
-      import ('./views/base/message.vue')
+      import('./views/base/message.vue')
   }, {
     path: '/write',
     name: "write",
     component: () =>
-      import ('./views/base/write.vue')
+      import('./views/base/write.vue')
   }, {
-    path: '/myHomePage',
-    name: 'myHomePage',
+    path: '/:id/userPage',
+    name: 'userPage',
     component: () =>
-      import ('./views/my/myHomePage.vue')
+      import('./views/my/userPage.vue')
+  }, {
+    path: '/:id/page',
+    name: 'page',
+    component: () =>
+      import('./views/my/page.vue')
   }, {
     path: '/myCollection',
     name: 'myCollection',
     component: () =>
-      import ('./views/my/myCollection.vue')
+      import('./views/my/myCollection.vue')
   }, {
     path: '/setting',
     name: 'setting',
     component: () =>
-      import ('./views/my/setting.vue')
+      import('./views/my/setting.vue')
   }]
 }, {
   path: "/login",
   name: "login",
   component: () =>
-    import ('./views/login/login.vue')
+    import('./views/login/login.vue')
 }, {
   path: "/register",
   name: "register",
   component: () =>
-    import ('./views/login/register.vue')
+    import('./views/login/register.vue')
 }, {
   path: "*",
-  redirect:'/'
+  redirect: '/'
 }]
 
 var router = new Router({

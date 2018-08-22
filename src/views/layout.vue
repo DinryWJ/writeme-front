@@ -38,9 +38,9 @@
 
     <!-- 路由 -->
     <el-row >
-      <el-col :span="4"><div class="grid-content"></div></el-col>
-      <el-col :span="16"><div class="grid-content"><router-view></router-view></div></el-col>
-      <el-col :span="4"><div class="grid-content"></div></el-col>
+      <el-col :span="5"><div class="grid-content"></div></el-col>
+      <el-col :span="14"><div class="grid-content"><router-view></router-view></div></el-col>
+      <el-col :span="5"><div class="grid-content"></div></el-col>
     </el-row>
 
     <!-- 消息提示 -->
@@ -90,6 +90,7 @@
 </style>
 
 <script>
+import axion from "@/util/http_url.js"; //接口文件
 import logo from "@/assets/logo.png";
 export default {
   data() {
@@ -106,7 +107,7 @@ export default {
         "",
         "/write"
       ],
-      mypath: ["", "/myHomePage", "/myCollection", "/myLike", "/setting"],
+      mypath: ["","", "/myCollection", "/myLike", "/setting"],
       activeIndex: "1",
       loginStatus: false,
       searchKey: "",
@@ -119,9 +120,18 @@ export default {
   },
   methods: {
     init() {
-      let name = this.$cookieStore.getCookie("token");
-      if (name != null) {
+      let currenttoken = this.$cookieStore.getCookie("token");
+      if (currenttoken != null) {
         this.loginStatus = true;
+        axion.getUserIdByToken({
+          token:currenttoken
+        }).then(d => {
+          if (d.data.code != 200) {
+            this.$alert(d.data.type, "提示", {});
+            return;
+          }
+          this.mypath[1] = "/"+d.data.data+"/userPage"
+        });
       } else {
         this.loginStatus = false;
       }

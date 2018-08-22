@@ -8,13 +8,13 @@
                 <br/>
                 <el-row :gutter="20">
                     <el-col :span="6" :offset="18"><div class="grid-content">
-                        <el-button type="primary"  @click="dialogVisible = true">上传新头像<i class="el-icon-upload el-icon--right"></i></el-button>  
+                        <el-button type="primary"  @click="dialogVisible = true" v-if="myflag == 0">上传新头像<i class="el-icon-upload el-icon--right"></i></el-button>  
                     </div></el-col>
                 </el-row>
           </el-header>
           <el-main>
-              <h1>鲁迅</h1>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Qui culpa debitis est quidem architecto non fugiat, aliquam a mollitia eos facere quos repudiandae cum. Fugiat quasi in veritatis eos iusto.</p>
+              <h1>{{userInfo.userName}}</h1>
+              <p>{{userInfo.userAbstract}}</p>
           </el-main>
         </el-container>
       </el-container>
@@ -25,23 +25,23 @@
             <el-tabs type="border-card" @tab-click="tabClick" :value="selectedTag">
             <el-tab-pane label="文章">
                     <!-- 文章列表 -->
-                    <h2>我的文章</h2>
-                    <el-radio-group v-model="status" size="small" style="float:right">
+                    <h2>文章列表</h2>
+                    <el-radio-group v-model="status" size="small" style="float:right" @change="handleRadioChange()">
                       <el-radio-button label="1">已发布</el-radio-button>
-                      <el-radio-button label="0">未发布</el-radio-button>
+                      <el-radio-button label="0" v-if="myflag==0">未发布</el-radio-button>
                     </el-radio-group>
                     <br>
                     <br/>
-                    <div :span="8" v-for="(o, index) in 6" :key="o" :offset="index > 0 ? 2 : 0">
+                    <div :span="8" v-for="item in articleList" :key="item.articleId">
                     <el-card :body-style="{ padding: '0px' }" shadow="hover">
                         <el-row :gutter="20">
                         <el-col :span="16">
                         <div class="grid-content">
                             <div style="padding: 14px;">
-                                <h3>好吃的汉堡</h3>
-                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste optio iure ut odit nihil voluptatibus officiis nemo nesciunt mollitia ea molestiae laboriosam in, quae asperiores beatae quisquam expedita! Cum, fugit!</p>
+                                <h3>{{item.title}}</h3>
+                                <p>{{item.articlePreview}}</p>
                                 <div class="bottom clearfix">
-                                <el-button type="text">鲁迅</el-button>
+                                <el-button type="text">{{item.userId}}</el-button>
                                 <el-button type="text" icon="el-icon-message">1</el-button>
                                 <el-button type="text" icon="el-icon-star-on">1</el-button>
                                 <el-button type="text" class="button">阅读全文</el-button>
@@ -54,15 +54,19 @@
                     <br/>
                     </div>
                     <!-- 分页 -->
-                    <el-pagination
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="currentPage"
-                    :page-size="10"
-                    :total="total">
-                    </el-pagination>
+                    <section class="margintop20 textAlignRight">
+                      <el-pagination 
+                      @size-change="handleSizeChange" 
+                      @current-change="handleCurrentChange" 
+                      :current-page.sync="pageNum" 
+                      :page-sizes="[10, 20, 30, 40]" 
+                      :page-size="pageSize" 
+                      layout="total, sizes, prev, pager, next, jumper" 
+                      :total="total">
+                      </el-pagination>
+                    </section>
             </el-tab-pane>
-            <el-tab-pane label="我关注的人">
+            <el-tab-pane label="关注的人">
                     <!-- 我关注的人列表 -->
                     <h2>关注人列表</h2>
                     <br/>
@@ -93,7 +97,7 @@
                     :total="total">
                     </el-pagination>
             </el-tab-pane>
-            <el-tab-pane label="关注我的人">
+            <el-tab-pane label="被关注">
 
             </el-tab-pane>
             <!-- <el-tab-pane label="收藏">
@@ -122,11 +126,10 @@
     <el-dialog
       title="提示"
       :visible.sync="dialogVisible"
-      width="30%"
-    >
+      width="30%">
       <el-upload
         class="avatar-uploader"
-        action="http://localhost:8762/upload/upload2"
+        action="http://localhost:8762/upload/upload"
         :show-file-list="false"
         :on-success="handleAvatarSuccess"
         :before-upload="beforeAvatarUpload">
@@ -141,7 +144,130 @@
     </el-dialog>
 </div>
 </template>
+<script>
+import axion from "@/util/http_url.js"; //接口文件
+import logo from "@/assets/logo.png";
+export default {
+  data() {
+    return {
+      currentId: 0,
+      // 判断当前userId是否为自己 1:是 0：不是
+      myflag: 0,
+      logo: logo,
+      selectedTag: "0",
+      status: "1",
+      dialogVisible: false,
+      imageUrl: "",
+      userInfo: {
+        userId: 0,
+        userAccount: "",
+        userPassword: "",
+        userName: "",
+        sex: "",
+        userPermission: "",
+        userAbstract: "",
+        status: ""
+      },
+      articleList:[],
+      pageNum: 1,
+      pageSize: 10,
+      currentPage: 1,
+      total: 0,
+    };
+  },
+  mounted() {
+    this.init();
+  },
+  methods: {
+    init() {
+      let _this = this;
+      axion
+        .getUserIdByToken({
+          token: this.$cookieStore.getCookie("token")
+        })
+        .then(d => {
+          if (d.data.code != 200) {
+            this.$alert(d.data.type, "提示", {});
+            return;
+          }
+          _this.currentId = _this.$route.params.id;
+          let vaildId = d.data.data;
+          if (_this.currentId == vaildId) {
+            this.myflag = 0;
+            this.$message("个人页面", "提示", {});
+          } else {
+            this.myflag = 1;
+            this.$message("他人页面", "提示", {});
+          }
+          this.getUserInfoById();
+          this.getArticleListByUserId(_this.currentId,1);
+        });
+    },
+    getUserInfoById() {
+      axion
+        .getUserInfoById({
+          userId: this.currentId
+        })
+        .then(d => {
+          if (d.data.code != 200) {
+            this.$alert(d.data.type, "提示", {});
+            return;
+          }
+          this.userInfo = d.data.data;
+          console.log(this.userInfo);
+        });
+    },
+    getArticleListByUserId() {
+      axion.getArticleListByUserId({
+        userId:this.currentId,
+        status: this.status,
+        pageNum:this.pageNum,
+        pageSize:this.pageSize
+      }).then(d => {
+        if (d.data.code != 200) {
+          this.$alert(d.data.type, "提示", {});
+          return;
+        }
+        this.articleList = d.data.data.list;
+        this.total = d.data.data.total;
+        this.currentPage = d.data.data.pageNum;
+      });
+    },
+    // 标签页方法
+    tabClick(targetName) {
+      console.log(targetName.index);
+    },
+    handleRadioChange(){
+      this.getArticleListByUserId();
+    },
+    //分页方法
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+    },
+    handleCurrentChange(val) {
+      // console.log(`当前页: ${val}`);
+      this.getArticleListByUserId();
+    },
+    //上传
+    handleAvatarSuccess(res, file) {
+      console.log(file);
+      this.imageUrl = URL.createObjectURL(file.raw);
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === "image/jpeg";
+      const isLt2M = file.size / 1024 / 1024 < 1;
 
+      if (!isJPG) {
+        this.$message.error("上传头像图片只能是 JPG 格式!");
+      }
+      if (!isLt2M) {
+        this.$message.error("上传头像图片大小不能超过 1MB!");
+      }
+      return isJPG && isLt2M;
+    }
+  }
+};
+</script>
 <style scoped>
 .followBtn {
   width: 150px;
@@ -170,28 +296,28 @@ p {
 }
 /*上传 */
 .avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-  .avatar-uploader .el-upload:hover {
-    border-color: #409EFF;
-  }
-  .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 178px;
-    height: 178px;
-    line-height: 178px;
-    text-align: center;
-  }
-  .avatar {
-    width: 178px;
-    height: 178px;
-    display: block;
-  } 
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
 /* 卡片 */
 .time {
   font-size: 13px;
@@ -253,56 +379,3 @@ p {
   background-color: #f9fafc;
 }
 </style>
-
-<script>
-import logo from "@/assets/logo.png";
-export default {
-  data() {
-    return {
-      logo: logo,
-      currentDate: new Date(),
-      selectedTag: "0",
-      currentPage: 4,
-      total: 120,
-      status: '1',
-      dialogVisible: false,
-      imageUrl: ''
-    };
-  },
-  mounted() {
-    this.init();
-  },
-  methods: {
-    init() {},
-    // 标签页方法
-    tabClick(targetName) {
-      console.log(targetName.index);
-    },
-    //分页方法
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
-    },
-    handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
-    },
-    //上传
-    handleAvatarSuccess(res, file) {
-      console.log(file)
-      this.imageUrl = URL.createObjectURL(file.raw);
-    },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg';
-      const isLt2M = file.size / 1024 / 1024 < 1;
-
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!');
-      }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 1MB!');
-      }
-      return isJPG && isLt2M;
-    }
-  
-  }
-};
-</script>

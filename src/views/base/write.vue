@@ -23,55 +23,80 @@
 <script>
 import axion from "@/util/http_url.js"; //接口文件
 
-import tinymce from 'tinymce/tinymce'
-import 'tinymce/themes/modern/theme'
-import Editor from '@tinymce/tinymce-vue'
-import 'tinymce/plugins/image'
-import 'tinymce/plugins/link'
-import 'tinymce/plugins/code'
-import 'tinymce/plugins/table'
-import 'tinymce/plugins/lists'
-import 'tinymce/plugins/contextmenu'
-import 'tinymce/plugins/wordcount'
-import 'tinymce/plugins/colorpicker'
-import 'tinymce/plugins/textcolor'
+import tinymce from "tinymce/tinymce";
+import "tinymce/themes/modern/theme";
+import Editor from "@tinymce/tinymce-vue";
+import "tinymce/plugins/image";
+import "tinymce/plugins/link";
+import "tinymce/plugins/code";
+import "tinymce/plugins/table";
+import "tinymce/plugins/lists";
+import "tinymce/plugins/contextmenu";
+import "tinymce/plugins/wordcount";
+import "tinymce/plugins/colorpicker";
+import "tinymce/plugins/textcolor";
 export default {
- name: 'tinymce',
- data () {
-  return {
-   tinymceHtml: '',
-   title:'',
-   init: {
-    language_url: '/tinymce/zh_CN.js',
-    language: 'zh_CN',
-    skin_url: '/tinymce/skins/lightgray',
-    height: 600,
-    plugins: 'link lists image code table colorpicker textcolor wordcount contextmenu',
-    toolbar:
-     'bold italic underline strikethrough | fontsizeselect | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent blockquote | undo redo | link unlink image code | removeformat',
-    branding: false
-   }
-  }
- },
- mounted () {
-  tinymce.init({})
- },
- components: {Editor},
- methods:{
-   publish(){
-     axion.publish({
-       token:this.$cookieStore.getCookie('token'),
-       title:this.title,
-       content:this.tinymceHtml,
-       corpusId:1
-     }).then(d => {
+  name: "tinymce",
+  data() {
+    return {
+      tinymceHtml: "",
+      title: "",
+      init: {
+        language_url: "/tinymce/zh_CN.js",
+        language: "zh_CN",
+        skin_url: "/tinymce/skins/lightgray",
+        height: 600,
+        plugins:
+          "link lists image code table colorpicker textcolor wordcount contextmenu",
+        toolbar:
+          "bold italic underline strikethrough | fontsizeselect | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent blockquote | undo redo | link unlink image code | removeformat",
+        branding: false,
+        // 图片上传三个参数，图片数据，成功时的回调函数，失败时的回调函数
+        images_upload_handler: function(blobInfo, success, failure) {
+          let formData = new FormData();
+          formData.append("file", blobInfo.blob(), blobInfo.filename());
+          axion.uploadImg(formData).then(d => {
+            if (d.data.code != 200) {
+              this.$alert(d.data.type, "提示", {});
+              failure("上传失败");
+            }
+            success(d.data.data.url);
+          });
+        }
+      }
+    };
+  },
+  mounted() {
+    tinymce.init({});
+  },
+  components: { Editor },
+  methods: {
+    publish() {
+      let activeEditor = tinymce.activeEditor;
+      let editBody = activeEditor.getBody();
+      activeEditor.selection.select(editBody);
+      let preview = activeEditor.selection.getContent({ format: "text" });
+      if (preview.length > 50) {
+        preview = preview.substring(0, 50);
+      }
+
+      axion
+        .publish({
+          token: this.$cookieStore.getCookie("token"),
+          title: this.title,
+          content: this.tinymceHtml,
+          preview: preview,
+          corpusId: 1
+        })
+        .then(d => {
           if (d.data.code != 200) {
             this.$alert(d.data.type, "提示", {});
             return;
           }
           this.$alert("成功", "提示", {});
+          this.$router.push("/");
         });
-   }
- }
-}
+    }
+  }
+};
 </script>

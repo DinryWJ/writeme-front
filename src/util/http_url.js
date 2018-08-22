@@ -41,24 +41,29 @@ const codeerror = d => {
 const post = (_url, obj) => axios.post(_url, obj, objBase).then(codeerror).catch(errorFn)
 const post2 = (_url, body) => axios.post(_url, body, modelBase).then(codeerror).catch(errorFn)
 
-/*通过标签获取宣教列表*/
-const getMissionListByClassify = (fristClassify, secondClassify, pageNo, pageSize) => post('/mission/getMissionListByClassify', fristClassify, secondClassify, pageNo, pageSize)
-
-/*更新宣教信息*/
-const updateMission = (token, mission) => post2('/mission/updateMission?token=' + token, mission)
-
 /*登陆*/
 const login =(name,pass) => post('/login/login',name,pass)
 /*注册*/
 const register = (parameters) =>post('/user/register',parameters)
 /*发布文章*/
-const publish = (token,title,content,corpusId) =>post('/article/addArticle',token,title,content,corpusId)
+const publish = (token,title,content,preview,corpusId) =>post('/article/addArticle',token,title,content,preview,corpusId)
+/*上传图片*/
+const uploadImg = (file) =>post2('/upload/upload',file)
+/*通过id获取文章信息*/
+const getArticleById = (articleId) =>post('/article/getArticleById',articleId)
+/*通过Id获取用户信息*/
+const getUserInfoById = (userId) =>post('/user/getUserInfoById',userId)
+/*通过status获取用户文章列表*/
+const getArticleListByUserId = (userId,status,pageNum,pageSize) => post('/article/getArticleListByUserId',userId,status,pageNum,pageSize);
+/*通过token获取id信息*/
+const getUserIdByToken = (token) =>post('/user/getUserIdByToken',token)
 export default {
-  getMissionListByClassify,
-
-  updateMission,
-
   login,
   register,
-  publish
+  publish,
+  uploadImg,
+  getArticleById,
+  getUserInfoById,
+  getArticleListByUserId,
+  getUserIdByToken
 }
