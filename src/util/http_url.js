@@ -46,7 +46,7 @@ const login =(name,pass) => post('/login/login',name,pass)
 /*注册*/
 const register = (parameters) =>post('/user/register',parameters)
 /*发布文章*/
-const publish = (token,title,content,preview,corpusId) =>post('/article/addArticle',token,title,content,preview,corpusId)
+const publish = (token,title,content,preview,coverImg,corpusId) =>post('/article/addArticle',token,title,content,preview,coverImg,corpusId)
 /*上传图片*/
 const uploadImg = (file) =>post2('/upload/upload',file)
 /*通过id获取文章信息*/

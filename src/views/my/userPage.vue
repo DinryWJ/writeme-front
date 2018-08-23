@@ -41,14 +41,14 @@
                                 <h3>{{item.title}}</h3>
                                 <p>{{item.articlePreview}}</p>
                                 <div class="bottom clearfix">
-                                <el-button type="text">{{item.userId}}</el-button>
+                                <el-button type="text">{{item.author.userName}}</el-button>
                                 <el-button type="text" icon="el-icon-message">1</el-button>
                                 <el-button type="text" icon="el-icon-star-on">1</el-button>
-                                <el-button type="text" class="button">阅读全文</el-button>
+                                <el-button type="text" class="button" @click="readFullText(item.articleId)">阅读全文</el-button>
                                 </div>
                             </div>
                         </div></el-col>
-                        <el-col :span="8"><div class="grid-content"><img :src="logo" class="image" /></div></el-col>
+                        <el-col :span="8"><div class="grid-content"><img v-bind:src="item.coverImg" class="image" /></div></el-col>
                         </el-row>
                     </el-card>
                     <br/>
@@ -232,6 +232,9 @@ export default {
         this.total = d.data.data.total;
         this.currentPage = d.data.data.pageNum;
       });
+    },
+    readFullText(articleId){
+      this.$router.push('/'+articleId+'/page');
     },
     // 标签页方法
     tabClick(targetName) {

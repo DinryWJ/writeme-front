@@ -72,6 +72,7 @@ export default {
   components: { Editor },
   methods: {
     publish() {
+      //获取预览文本
       let activeEditor = tinymce.activeEditor;
       let editBody = activeEditor.getBody();
       activeEditor.selection.select(editBody);
@@ -80,12 +81,19 @@ export default {
         preview = preview.substring(0, 50);
       }
 
+      //获取预览图
+      let regex="src=[\'\"]?([^\'\"]*)[\'\"]?";
+      let result = this.tinymceHtml.match(regex);
+      // let coverImg = result[0].substring(6,result[0].length-2);
+      let coverImg = result[1];
+      
       axion
         .publish({
           token: this.$cookieStore.getCookie("token"),
           title: this.title,
           content: this.tinymceHtml,
           preview: preview,
+          coverImg:coverImg,
           corpusId: 1
         })
         .then(d => {
