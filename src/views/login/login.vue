@@ -112,6 +112,8 @@ export default {
           }
           let currentToken = d.data.data.token;
           this.$cookieStore.addCookie("token", currentToken);
+          this.$cookieStore.addCookie("userId", d.data.data.userId);
+          this.$cookieStore.addCookie("userName", d.data.data.userName);
           this.$router.push("/");
         });
     }

@@ -168,11 +168,11 @@ export default {
         userAbstract: "",
         status: ""
       },
-      articleList:[],
+      articleList: [],
       pageNum: 1,
       pageSize: 10,
       currentPage: 1,
-      total: 0,
+      total: 0
     };
   },
   mounted() {
@@ -180,28 +180,16 @@ export default {
   },
   methods: {
     init() {
-      let _this = this;
-      axion
-        .getUserIdByToken({
-          token: this.$cookieStore.getCookie("token")
-        })
-        .then(d => {
-          if (d.data.code != 200) {
-            this.$alert(d.data.type, "提示", {});
-            return;
-          }
-          _this.currentId = _this.$route.params.id;
-          let vaildId = d.data.data;
-          if (_this.currentId == vaildId) {
-            this.myflag = 0;
-            this.$message("个人页面", "提示", {});
-          } else {
-            this.myflag = 1;
-            this.$message("他人页面", "提示", {});
-          }
-          this.getUserInfoById();
-          this.getArticleListByUserId(_this.currentId,1);
-        });
+      this.currentId = this.$route.params.id;
+      if (this.currentId == this.$cookieStore.getCookie("userId")) {
+        this.myflag = 0;
+        this.$message("个人页面", "提示", {});
+      } else {
+        this.myflag = 1;
+        this.$message("他人页面", "提示", {});
+      }
+      this.getUserInfoById();
+      this.getArticleListByUserId(this.currentId, 1);
     },
     getUserInfoById() {
       axion
@@ -218,29 +206,31 @@ export default {
         });
     },
     getArticleListByUserId() {
-      axion.getArticleListByUserId({
-        userId:this.currentId,
-        status: this.status,
-        pageNum:this.pageNum,
-        pageSize:this.pageSize
-      }).then(d => {
-        if (d.data.code != 200) {
-          this.$alert(d.data.type, "提示", {});
-          return;
-        }
-        this.articleList = d.data.data.list;
-        this.total = d.data.data.total;
-        this.currentPage = d.data.data.pageNum;
-      });
+      axion
+        .getArticleListByUserId({
+          userId: this.currentId,
+          status: this.status,
+          pageNum: this.pageNum,
+          pageSize: this.pageSize
+        })
+        .then(d => {
+          if (d.data.code != 200) {
+            this.$alert(d.data.type, "提示", {});
+            return;
+          }
+          this.articleList = d.data.data.list;
+          this.total = d.data.data.total;
+          this.currentPage = d.data.data.pageNum;
+        });
     },
-    readFullText(articleId){
-      this.$router.push('/'+articleId+'/page');
+    readFullText(articleId) {
+      this.$router.push("/" + articleId + "/page");
     },
     // 标签页方法
     tabClick(targetName) {
       console.log(targetName.index);
     },
-    handleRadioChange(){
+    handleRadioChange() {
       this.getArticleListByUserId();
     },
     //分页方法

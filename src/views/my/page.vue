@@ -32,56 +32,64 @@
                     type="textarea"
                     :autosize="{ minRows: 2, maxRows: 4}"
                     placeholder="请输入内容"
-                    :focus="isShow=true"
                     v-model="textarea">
                   </el-input>
-                  <div style="float:right;margin-top:20px;" v-show="isShow">
-                    <el-button type="text" @click="comBtn=false">取消</el-button>
-                    <el-button type="success" round>发送</el-button>
+                  <div style="float:right;margin-top:20px;">
+                    <el-button type="text" >取消</el-button>
+                    <el-button type="success" round @click="addComment()">发送</el-button>
                   </div>
                 </div>
                 <h2>评论</h2>
                 <hr/>
-
-                <div>
+                <div v-if="comments.length==0">暂无评论</div>
+                <div v-for="comm in comments" :key="comm.commentId">
+                  <div>
                   <div style="float:left;height:50px;margin-right:10px;">
-                    <img :src="page.author.userImage" style="height:100%;border-radius:50px;" />
+                    <img :src="comm.user.userImage" style="height:100%;border-radius:50px;" />
                   </div>
                   <div>
-                    <span>{{page.author.userName}}</span>
+                    <span>{{comm.user.userName}}</span>
                     <div class="bottom clearfix">
-                      <span>{{page.createTime}}</span>
+                      <span>{{comm.commentTime}}</span>
                     </div>
                   </div>
+                  </div>
+                  <div>
+                    <p style="text-indent:2em; padding:0px; margin:10px 0;">
+                      {{comm.commentContent}}
+                    </p>
+                  </div>
+                  <div>
+                    <el-button type="text" icon="el-icon-star-off"><span>1人</span>赞</el-button>
+                    <el-button type="text" icon="el-icon-edit-outline" v-show="currentId!=comm.userId" @click="handleQuickReply(comm.user.userName,comm.userId,comm.commentId)">回复</el-button>
+                  </div>
+                  <ul style="list-style-type:none;">
+                    <li v-for="li in comm.commentList" :key="li.commentId">
+                      <div>
+                        <el-button type="text">{{li.user.userName}}</el-button><span>: </span><span>{{li.commentContent}}</span>
+                      </div>
+                      <div>
+                        <span style="font-size:12px;">{{li.commentTime}}</span>
+                        <el-button type="text" icon="el-icon-edit-outline" v-show="currentId!=li.userId" @click="handleQuickReply(li.user.userName,li.user.userId,li.parentCommentId)">回复</el-button>
+                      </div>
+                    </li>
+                  </ul>     
                 </div>
-                <div>
-                  <p style="text-indent:2em; padding:0px; margin:10px 0;">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse sit tenetur excepturi quisquam ad consequatur nihil vel, corrupti veniam autem eos in eaque nulla deleniti! Ad dolor dolores placeat dignissimos!
-                  </p>
-                </div>
-                <div>
-                  <el-button type="text" icon="el-icon-star-off"><span>1人</span>赞</el-button>
-                  <el-button type="text" icon="el-icon-edit-outline">回复</el-button>
-                </div>
-                <ul style="list-style-type:none;">
-                  <li>
-                    <div>
-                      <el-button type="text">文字按钮</el-button><span>: </span><el-button type="text" disabled>@文字按钮</el-button><span>dfsdfds</span>
-                    </div>
-                    <div>
-                      <span style="font-size:12px;">{{page.createTime}}</span><el-button type="text" icon="el-icon-edit-outline">回复</el-button>
-                    </div>
-                  </li>
-                  <li>
-                    <div>
-                      <el-button type="text">文字按钮</el-button><span>: </span><el-button type="text" disabled>@文字按钮</el-button><span>dfsdfds</span>
-                    </div>
-                    <div>
-                      <span style="font-size:12px;">{{page.createTime}}</span><el-button type="text" icon="el-icon-edit-outline">回复</el-button>
-                    </div>
-                  </li>
-                </ul>
-            </div></el-col>
+
+                <el-dialog title="回复" :visible.sync="quickReplyVisible">
+                    <el-input
+                      :rows="2"
+                      placeholder="请输入内容"
+                      maxlength="100"
+                      v-model="quickReply.textarea"><template slot="prepend">@{{quickReply.currentUserName}}</template>
+                    </el-input>
+                  <div slot="footer" class="dialog-footer">
+                    <el-button @click="quickReplyVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="sendQuickReply()">确 定</el-button>
+                  </div>
+                </el-dialog>
+            </div>
+            </el-col>
             <el-col :span="3"><div class="grid-content"></div></el-col>
         </el-row>
 
@@ -94,6 +102,7 @@ import { formatDate } from "@/util/dateUtil.js";
 export default {
   data() {
     return {
+      currentId:0,
       show: true,
       starOn: "/starOn.png",
       starOff: "/starOff.png",
@@ -114,8 +123,30 @@ export default {
         commentNum: 0,
         likeNum: 0
       },
+      comments: [],
+      comment: {
+        commentId: 0,
+        commentContent: "",
+        commentTime: "",
+        articleId: 0,
+        userId: 0,
+        commentedUserId:0,
+        user: {},
+        parentCommentId: 0,
+        commentList: []
+      },
       textarea: "",
-      isShow: false
+      
+      pageNum: 1,
+      pageSize: 20,
+      total: 0,
+      quickReplyVisible: false,
+      quickReply: {
+        parentCommentId: 0,
+        currentUserId: 0,
+        currentUserName:'',
+        textarea: ""
+      }
     };
   },
   mounted() {
@@ -123,6 +154,7 @@ export default {
   },
   methods: {
     init() {
+      this.currentId = this.$cookieStore.getCookie("userId");
       this.page.articleId = this.$route.params.id;
       axion
         .getArticleById({
@@ -134,16 +166,83 @@ export default {
             return;
           }
           this.page = d.data.data;
-          this.page.createTime = formatDate(d.data.data.createTime);
 
           //模拟
           this.page.readNum = 0;
           this.page.commentNum = 0;
           this.page.likeNum = 0;
+
+          this.initComment();
         });
     },
     starchange() {
       this.starStatus = !this.starStatus;
+    },
+    addComment() {
+      if (this.textarea != null) {
+        let comment = {};
+        comment.commentContent = this.textarea;
+        comment.articleId = this.page.articleId;
+        comment.commentedUserId= this.page.userId;
+        comment.parentCommentId = 0;
+        axion
+          .addComment(this.$cookieStore.getCookie("token"), comment)
+          .then(d => {
+            if (d.data.code != 200) {
+              this.$alert(d.data.type, "提示", {});
+              return;
+            }
+            this.$alert("评论成功", "提示", {});
+            this.init();
+          });
+      }
+    },
+    initComment() {
+      axion
+        .getArticleComment({
+          articleId: this.page.articleId,
+          pageNum: this.pageNum,
+          pageSize: this.pageSize
+        })
+        .then(d => {
+          if (d.data.code != 200) {
+            this.$alert(d.data.type, "提示", {});
+            return;
+          }
+          let commentList = new Array();
+          for (let i = 0; i < d.data.data.list.length; i++) {
+            let comment = d.data.data.list[i];
+            commentList.push(comment);
+          }
+          this.comments = commentList;
+          console.log(this.comments);
+        });
+    },
+    handleQuickReply(name,userId,id){
+      this.quickReplyVisible = true;
+      this.quickReply.currentUserName=name;
+      this.quickReply.currentUserId = userId;
+      this.quickReply.parentCommentId=id;
+    },
+    sendQuickReply(){
+      if (this.textarea != null) {
+        let comment = {};
+        comment.commentContent = "@"+this.quickReply.currentUserName+" "+this.quickReply.textarea;
+        comment.articleId = this.page.articleId;
+        comment.commentedUserId = this.quickReply.currentUserId;
+        comment.parentCommentId = this.quickReply.parentCommentId;
+        axion
+          .addComment(this.$cookieStore.getCookie("token"), comment)
+          .then(d => {
+            if (d.data.code != 200) {
+              this.$alert(d.data.type, "提示", {});
+              return;
+            }
+            this.$alert("评论成功", "提示", {});
+            this.quickReplyVisible = false;
+            this.init();
+          });
+      }
     }
   }
 };

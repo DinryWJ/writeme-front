@@ -57,6 +57,10 @@ const getUserInfoById = (userId) =>post('/user/getUserInfoById',userId)
 const getArticleListByUserId = (userId,status,pageNum,pageSize) => post('/article/getArticleListByUserId',userId,status,pageNum,pageSize);
 /*通过token获取id信息*/
 const getUserIdByToken = (token) =>post('/user/getUserIdByToken',token)
+/*发送评论*/
+const addComment = (token,comment) => post2('/comment/addComment?token='+token,comment)
+/*获取文章评论*/
+const getArticleComment = (articleId, pageNum, pageSize) => post('/comment/getArticleComment', articleId, pageNum, pageSize)
 export default {
   login,
   register,
@@ -65,5 +69,7 @@ export default {
   getArticleById,
   getUserInfoById,
   getArticleListByUserId,
-  getUserIdByToken
+  getUserIdByToken,
+  addComment,
+  getArticleComment
 }
