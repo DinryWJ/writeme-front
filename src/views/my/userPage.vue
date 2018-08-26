@@ -2,13 +2,15 @@
 <div>
     <el-card :body-style="{ padding: '0px' }">
       <el-container>
-        <el-aside><img :src="logo" class="img"/></el-aside>
+        <el-aside><img :src="userInfo.userImage" class="img"/></el-aside>
         <el-container>
           <el-header>
                 <br/>
                 <el-row :gutter="20">
                     <el-col :span="6" :offset="18"><div class="grid-content">
-                        <el-button type="primary"  @click="dialogVisible = true" v-if="myflag == 0">上传新头像<i class="el-icon-upload el-icon--right"></i></el-button>  
+                        <el-button type="primary"  @click="dialogVisible = true" v-if="myflag == 0">上传新头像<i class="el-icon-upload el-icon--right"></i></el-button>
+                        <el-button type="danger" round v-if="myflag == 1 && concernStatus==1" @click="addConcern()">加关注</el-button>
+                        <el-button type="info" round v-if="myflag == 1 && concernStatus==0" @click="deleteConcern(currentId)">取消关注</el-button>
                     </div></el-col>
                 </el-row>
           </el-header>
@@ -56,12 +58,9 @@
                     <!-- 分页 -->
                     <section class="margintop20 textAlignRight">
                       <el-pagination 
-                      @size-change="handleSizeChange" 
                       @current-change="handleCurrentChange" 
                       :current-page.sync="pageNum" 
-                      :page-sizes="[10, 20, 30, 40]" 
-                      :page-size="pageSize" 
-                      layout="total, sizes, prev, pager, next, jumper" 
+                      :page-size="10" 
                       :total="total">
                       </el-pagination>
                     </section>
@@ -70,35 +69,60 @@
                     <!-- 我关注的人列表 -->
                     <h2>关注人列表</h2>
                     <br/>
-                    <div :span="8" v-for="(o, index) in 6" :key="o" :offset="index > 0 ? 2 : 0">
+                    <div :span="8" v-for="con in concernList" :key="con.concernId">
                     <el-card :body-style="{ padding: '0px' }" shadow="hover">
                         <el-row>
                         <el-col :span="6"><div class="grid-content">
-                            <img :src="logo" class="img"/>
+                            <img :src="con.concernedUser.userImage" class="img" style="width:100px;height:100px;margin-top:20px;"/>
                         </div></el-col>
                         <el-col :span="12"><div class="grid-content">
-                            <h3>老舍</h3>
-                            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Corporis quo amet beatae dolore nisi sapiente iure quisquam, asperiores, ad aspernatur maxime labore! Dignissimos, voluptates. Harum officiis culpa explicabo nesciunt earum.</p> 
+                            <el-button type="text" @click="gotoUserPage(con.concernedUser.userId)" style="padding:20px 0 0 0;"><span>{{con.concernedUser.userName}}</span></el-button>
+                            <p>{{con.concernedUser.userAbstract}}</p> 
                             <div class="bottom clearfix">
-                                <span>12</span><span>篇文章,</span><span>13</span><span>个关注</span>
+                                <span>{{con.userArticleCount}}</span><span>篇文章,</span><span>{{con.userConcernedCount}}</span><span>个关注</span>
                             </div>
                         </div></el-col>
-                        <el-col :span="6"><div class="grid-content"><el-button class="followBtn">未关注</el-button></div></el-col>
+                        <el-col :span="6"><div class="grid-content"><el-button style="margin-top:50px;" @click="handleCancleFollow(con.concernedUser.userId)">取消关注</el-button></div></el-col>
                         </el-row>
                     </el-card>
                     <br/>
                     </div>
                     <!-- 分页 -->
                     <el-pagination
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="currentPage"
+                    @current-change="handleCurrentChange2"
+                    :current-page.sync="pageNum2" 
                     :page-size="10"
-                    :total="total">
+                    :total="total2">
                     </el-pagination>
             </el-tab-pane>
             <el-tab-pane label="被关注">
-
+                    <h2>被关注人列表</h2>
+                    <br/>
+                    <div :span="8" v-for="cond in concernedList" :key="cond.concernId">
+                    <el-card :body-style="{ padding: '0px' }" shadow="hover">
+                        <el-row>
+                        <el-col :span="6"><div class="grid-content">
+                            <img :src="cond.concernerUser.userImage" class="img" style="width:100px;height:100px;margin-top:20px;"/>
+                        </div></el-col>
+                        <el-col :span="12"><div class="grid-content">
+                            <el-button type="text" @click="gotoUserPage(cond.concernerUser.userId)" style="padding:20px 0 0 0;"><span>{{cond.concernerUser.userName}}</span></el-button>
+                            <p>{{cond.concernerUser.userAbstract}}</p> 
+                            <div class="bottom clearfix">
+                                <span>{{cond.userArticleCount}}</span><span>篇文章,</span><span>{{cond.userConcernedCount}}</span><span>个关注</span>
+                            </div>
+                        </div></el-col>
+                        <!-- <el-col :span="6"><div class="grid-content"><el-button style="margin-top:50px;" @click="handleCancleFollow(cond.concernedUser.userId)">加关注</el-button></div></el-col> -->
+                        </el-row>
+                    </el-card>
+                    <br/>
+                    </div>
+                    <!-- 分页 -->
+                    <el-pagination
+                    @current-change="handleCurrentChange3"
+                    :current-page.sync="pageNum3" 
+                    :page-size="10"
+                    :total="total3">
+                    </el-pagination>
             </el-tab-pane>
             <!-- <el-tab-pane label="收藏">
 
@@ -107,11 +131,11 @@
         </div></el-col>
         <el-col :span="8"><div class="grid-content">
             <el-card class="box-card">
-               <div>关注了 <el-button type="text"><h1>1</h1></el-button> 个人</div>
+               <div>关注了 <el-button type="text"><h1>{{concernCount}}</h1></el-button> 个人</div>
             </el-card>
             <br />
             <el-card class="box-card">
-               <div>关注者 <el-button type="text"><h1>1</h1></el-button> 个人</div>
+               <div>关注者 <el-button type="text"><h1>{{fansCount}}</h1></el-button> 个人</div>
             </el-card>
             <br/>
             <el-card class="box-card">
@@ -153,6 +177,8 @@ export default {
       currentId: 0,
       // 判断当前userId是否为自己 1:是 0：不是
       myflag: 0,
+      //关注状态 1：已关注 2:未关注
+      concernStatus: 0,
       logo: logo,
       selectedTag: "0",
       status: "1",
@@ -166,13 +192,23 @@ export default {
         sex: "",
         userPermission: "",
         userAbstract: "",
-        status: ""
+        status: "",
+        userImage: ""
       },
+      fansCount: 0,
+      concernCount: 0,
+      //标签1
       articleList: [],
       pageNum: 1,
-      pageSize: 10,
-      currentPage: 1,
-      total: 0
+      total: 0,
+      //标签2
+      concernList: [],
+      pageNum2: 1,
+      total2: 0,
+      //标签3
+      concernedList: [],
+      pageNum3: 1,
+      total3: 0
     };
   },
   mounted() {
@@ -187,8 +223,11 @@ export default {
       } else {
         this.myflag = 1;
         this.$message("他人页面", "提示", {});
+        this.getConcernStatus();
       }
       this.getUserInfoById();
+      this.getUserFansCount();
+      this.getUserConcernCount();
       this.getArticleListByUserId(this.currentId, 1);
     },
     getUserInfoById() {
@@ -205,13 +244,87 @@ export default {
           console.log(this.userInfo);
         });
     },
+    getConcernStatus() {
+      axion
+        .getConcernStatus({
+          token: this.$cookieStore.getCookie("token"),
+          concernedUserId: this.currentId
+        })
+        .then(d => {
+          if (d.data.code != 200) {
+            this.$alert(d.data.type, "提示", {});
+            return;
+          }
+          this.concernStatus = d.data.data > 0 ? 0 : 1;
+        });
+    },
+    handleCancleFollow(id) {
+      this.deleteConcern(id);
+      this.getUserConcernList();
+    },
+    addConcern() {
+      axion
+        .addConcern({
+          token: this.$cookieStore.getCookie("token"),
+          concernedUserId: this.currentId
+        })
+        .then(d => {
+          if (d.data.code != 200) {
+            this.$alert(d.data.type, "提示", {});
+            return;
+          }
+          this.init();
+          this.$message("已关注！");
+        });
+    },
+    deleteConcern(id) {
+      axion
+        .deleteConcern({
+          token: this.$cookieStore.getCookie("token"),
+          concernedUserId: id
+        })
+        .then(d => {
+          if (d.data.code != 200) {
+            this.$alert(d.data.type, "提示", {});
+            return;
+          }
+          this.init();
+          this.$message("已取消关注！");
+        });
+    },
+    getUserFansCount() {
+      axion
+        .getUserFansCount({
+          userId: this.currentId
+        })
+        .then(d => {
+          if (d.data.code != 200) {
+            this.$alert(d.data.type, "提示", {});
+            return;
+          }
+          this.fansCount = d.data.data;
+        });
+    },
+    getUserConcernCount() {
+      axion
+        .getUserConcernCount({
+          userId: this.currentId
+        })
+        .then(d => {
+          if (d.data.code != 200) {
+            this.$alert(d.data.type, "提示", {});
+            return;
+          }
+          this.concernCount = d.data.data;
+        });
+    },
     getArticleListByUserId() {
       axion
         .getArticleListByUserId({
           userId: this.currentId,
           status: this.status,
           pageNum: this.pageNum,
-          pageSize: this.pageSize
+          pageSize: 10
         })
         .then(d => {
           if (d.data.code != 200) {
@@ -224,22 +337,85 @@ export default {
         });
     },
     readFullText(articleId) {
-      this.$router.push("/" + articleId + "/page");
+      const { href } = this.$router.resolve({
+        name: "page",
+        params: {
+          id: articleId
+        }
+      });
+      window.open(href, "_blank");
+      // this.$router.push("/" + articleId + "/page");
+    },
+    getUserConcernList() {
+      axion
+        .getUserConcernList({
+          userId: this.currentId,
+          pageNum: this.pageNum2,
+          pageSize: 10
+        })
+        .then(d => {
+          if (d.data.code != 200) {
+            this.$alert(d.data.type, "提示", {});
+            return;
+          }
+          this.concernList = d.data.data.list;
+          this.total2 = d.data.data.total;
+          this.currentPage2 = d.data.data.pageNum;
+        });
+    },
+    getUserFansList(){
+      axion.getUserFansList({
+          userId: this.currentId,
+          pageNum: this.pageNum3,
+          pageSize: 10
+        })
+        .then(d => {
+          if (d.data.code != 200) {
+            this.$alert(d.data.type, "提示", {});
+            return;
+          }
+          this.concernedList = d.data.data.list;
+          this.total3 = d.data.data.total;
+          this.currentPage3 = d.data.data.pageNum;
+        });
     },
     // 标签页方法
     tabClick(targetName) {
       console.log(targetName.index);
+      if (targetName.index == 0) {
+        this.pageNum = 1;
+        this.status = "1";
+        this.getArticleListByUserId();
+      }
+      if (targetName.index == 1) {
+        this.pageNum2 = 1;
+        this.getUserConcernList();
+      }
+      if (targetName.index == 2) {
+        this.pageNum3 = 1;
+        this.getUserFansList(this.currentId, 1, 10);
+      }
     },
     handleRadioChange() {
       this.getArticleListByUserId();
     },
     //分页方法
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
-    },
     handleCurrentChange(val) {
       // console.log(`当前页: ${val}`);
       this.getArticleListByUserId();
+    },
+    handleRadioChange() {
+      this.getArticleListByUserId();
+    },
+    //分页方法2
+    handleCurrentChange2(val) {
+      // console.log(`当前页: ${val}`);
+      this.getUserConcernList();
+    },
+    //分页方法3
+    handleCurrentChange3(val) {
+      // console.log(`当前页: ${val}`);
+      this.getUserFansList();
     },
     //上传
     handleAvatarSuccess(res, file) {
@@ -257,6 +433,15 @@ export default {
         this.$message.error("上传头像图片大小不能超过 1MB!");
       }
       return isJPG && isLt2M;
+    },
+    gotoUserPage(id) {
+      const { href } = this.$router.resolve({
+        name: "userPage",
+        params: {
+          id: id
+        }
+      });
+      window.open(href, "_blank");
     }
   }
 };
@@ -274,7 +459,7 @@ export default {
 .img {
   height: 150px;
   width: 150px;
-  padding-top: 30px;
+  border-radius: 100%;
   display: block;
   margin: 0 auto;
 }

@@ -10,7 +10,7 @@
                     <img :src="page.author.userImage" style="height:100%;border-radius:50px;" />
                   </div>
                   <div>
-                    <span>{{page.author.userName}}</span><el-button round class="button">关注</el-button>
+                    <span>{{page.author.userName}}</span><el-button round class="button" v-show="page.concernStatus==0 &&flag ==0" @click="handleConcern(1)">关注TA</el-button><el-button round class="button" v-show="page.concernStatus==1 &&flag ==0" @click="handleConcern(0)">取消关注</el-button>
                     <div class="bottom clearfix">
                       <span>{{page.createTime}}</span>
                       <span> 阅读 </span><span>{{page.readNum}}</span>
@@ -102,8 +102,9 @@ import { formatDate } from "@/util/dateUtil.js";
 export default {
   data() {
     return {
-      currentId:0,
-      show: true,
+      currentId: 0,
+      //是否为我的文章 0不是 1是
+      flag: 0,
       starOn: "/starOn.png",
       starOff: "/starOff.png",
       starStatus: false,
@@ -119,6 +120,7 @@ export default {
           userName: "",
           userImage: ""
         },
+        concernStatus: 0,
         readNum: 0,
         commentNum: 0,
         likeNum: 0
@@ -130,13 +132,12 @@ export default {
         commentTime: "",
         articleId: 0,
         userId: 0,
-        commentedUserId:0,
+        commentedUserId: 0,
         user: {},
         parentCommentId: 0,
         commentList: []
       },
       textarea: "",
-      
       pageNum: 1,
       pageSize: 20,
       total: 0,
@@ -144,7 +145,7 @@ export default {
       quickReply: {
         parentCommentId: 0,
         currentUserId: 0,
-        currentUserName:'',
+        currentUserName: "",
         textarea: ""
       }
     };
@@ -172,6 +173,7 @@ export default {
           this.page.commentNum = 0;
           this.page.likeNum = 0;
 
+          this.validConcern();
           this.initComment();
         });
     },
@@ -183,7 +185,7 @@ export default {
         let comment = {};
         comment.commentContent = this.textarea;
         comment.articleId = this.page.articleId;
-        comment.commentedUserId= this.page.userId;
+        comment.commentedUserId = this.page.userId;
         comment.parentCommentId = 0;
         axion
           .addComment(this.$cookieStore.getCookie("token"), comment)
@@ -196,6 +198,67 @@ export default {
             this.init();
           });
       }
+    },
+    validConcern() {
+      if (this.currentId == this.page.userId) {
+        this.flag = 1;
+      } else {
+        this.flag = 0;
+        axion
+          .getConcernStatus({
+            token: this.$cookieStore.getCookie("token"),
+            concernedUserId: this.page.userId
+          })
+          .then(d => {
+            if (d.data.code != 200) {
+              this.$alert(d.data.type, "提示", {});
+              return;
+            }
+            if (d.data.data > 0) {
+              this.page.concernStatus = 1;
+            } else {
+              this.page.concernStatus = 0;
+            }
+            console.log(this.flag);
+          });
+      }
+    },
+    handleConcern(val){
+      if (val ==1) {
+        this.addConcern();
+      }else{
+        this.deleteConcern(this.page.userId);
+      }
+    },
+    addConcern() {
+      axion
+        .addConcern({
+          token: this.$cookieStore.getCookie("token"),
+          concernedUserId:  this.page.userId
+        })
+        .then(d => {
+          if (d.data.code != 200) {
+            this.$alert(d.data.type, "提示", {});
+            return;
+          }
+          this.init();
+          this.$message("已关注！");
+        });
+    },
+    deleteConcern(id) {
+      axion
+        .deleteConcern({
+          token: this.$cookieStore.getCookie("token"),
+          concernedUserId: id
+        })
+        .then(d => {
+          if (d.data.code != 200) {
+            this.$alert(d.data.type, "提示", {});
+            return;
+          }
+          this.init();
+          this.$message("已取消关注！");
+        });
     },
     initComment() {
       axion
@@ -218,16 +281,20 @@ export default {
           console.log(this.comments);
         });
     },
-    handleQuickReply(name,userId,id){
+    handleQuickReply(name, userId, id) {
       this.quickReplyVisible = true;
-      this.quickReply.currentUserName=name;
+      this.quickReply.currentUserName = name;
       this.quickReply.currentUserId = userId;
-      this.quickReply.parentCommentId=id;
+      this.quickReply.parentCommentId = id;
     },
-    sendQuickReply(){
+    sendQuickReply() {
       if (this.textarea != null) {
         let comment = {};
-        comment.commentContent = "@"+this.quickReply.currentUserName+" "+this.quickReply.textarea;
+        comment.commentContent =
+          "@" +
+          this.quickReply.currentUserName +
+          " " +
+          this.quickReply.textarea;
         comment.articleId = this.page.articleId;
         comment.commentedUserId = this.quickReply.currentUserId;
         comment.parentCommentId = this.quickReply.parentCommentId;

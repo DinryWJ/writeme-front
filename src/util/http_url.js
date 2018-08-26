@@ -42,25 +42,39 @@ const post = (_url, obj) => axios.post(_url, obj, objBase).then(codeerror).catch
 const post2 = (_url, body) => axios.post(_url, body, modelBase).then(codeerror).catch(errorFn)
 
 /*登陆*/
-const login =(name,pass) => post('/login/login',name,pass)
+const login = (name, pass) => post('/login/login', name, pass)
 /*注册*/
-const register = (parameters) =>post('/user/register',parameters)
+const register = (parameters) => post('/user/register', parameters)
 /*发布文章*/
-const publish = (token,title,content,preview,coverImg,corpusId) =>post('/article/addArticle',token,title,content,preview,coverImg,corpusId)
+const publish = (token, title, content, preview, coverImg, corpusId) => post('/article/addArticle', token, title, content, preview, coverImg, corpusId)
 /*上传图片*/
-const uploadImg = (file) =>post2('/upload/upload',file)
+const uploadImg = (file) => post2('/upload/upload', file)
 /*通过id获取文章信息*/
-const getArticleById = (articleId) =>post('/article/getArticleById',articleId)
+const getArticleById = (articleId) => post('/article/getArticleById', articleId)
 /*通过Id获取用户信息*/
-const getUserInfoById = (userId) =>post('/user/getUserInfoById',userId)
+const getUserInfoById = (userId) => post('/user/getUserInfoById', userId)
 /*通过status获取用户文章列表*/
-const getArticleListByUserId = (userId,status,pageNum,pageSize) => post('/article/getArticleListByUserId',userId,status,pageNum,pageSize);
+const getArticleListByUserId = (userId, status, pageNum, pageSize) => post('/article/getArticleListByUserId', userId, status, pageNum, pageSize);
 /*通过token获取id信息*/
-const getUserIdByToken = (token) =>post('/user/getUserIdByToken',token)
+const getUserIdByToken = (token) => post('/user/getUserIdByToken', token)
 /*发送评论*/
-const addComment = (token,comment) => post2('/comment/addComment?token='+token,comment)
+const addComment = (token, comment) => post2('/comment/addComment?token=' + token, comment)
 /*获取文章评论*/
 const getArticleComment = (articleId, pageNum, pageSize) => post('/comment/getArticleComment', articleId, pageNum, pageSize)
+/*获取用户粉丝数*/
+const getUserFansCount = (userId) => post('/concern/getUserFansCount', userId)
+/*获取用户关注数*/
+const getUserConcernCount = (userId) => post('/concern/getUserConcernCount', userId)
+/*获取关注状态*/
+const getConcernStatus = (token, concernedUserId) => post('/concern/getConcernStatus', token, concernedUserId)
+/*关注*/
+const addConcern = (token, concernedUserId) => post('/concern/addConcern', token, concernedUserId)
+/*取消关注*/
+const deleteConcern = (token, concernedUserId) => post('/concern/deleteConcern', token, concernedUserId)
+/*获取用户关注人列表*/
+const getUserConcernList = (userId, pageNum, pageSize) => post('/concern/getUserConcernList', userId, pageNum, pageSize)
+/*获取用户粉丝列表*/
+const getUserFansList = (userId, pageNum, pageSize) => post('/concern/getUserFansList', userId, pageNum, pageSize)
 export default {
   login,
   register,
@@ -71,5 +85,12 @@ export default {
   getArticleListByUserId,
   getUserIdByToken,
   addComment,
-  getArticleComment
+  getArticleComment,
+  getUserFansCount,
+  getUserConcernCount,
+  getConcernStatus,
+  addConcern,
+  deleteConcern,
+  getUserConcernList,
+  getUserFansList
 }
