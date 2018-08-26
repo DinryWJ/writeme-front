@@ -153,17 +153,16 @@
       width="30%">
       <el-upload
         class="avatar-uploader"
-        action="http://localhost:8762/upload/upload"
+        action="cannot be reach here"
         :show-file-list="false"
-        :on-success="handleAvatarSuccess"
-        :before-upload="beforeAvatarUpload">
+        :http-request="uploadUserImage">
         <img v-if="imageUrl" :src="imageUrl" class="avatar">
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
       </el-upload>
 
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="confirmUpload()">确 定</el-button>
       </span>
     </el-dialog>
 </div>
@@ -418,9 +417,17 @@ export default {
       this.getUserFansList();
     },
     //上传
-    handleAvatarSuccess(res, file) {
-      console.log(file);
-      this.imageUrl = URL.createObjectURL(file.raw);
+    uploadUserImage(f){
+      console.log(f);
+      let form = new FormData();
+      form.append("file",f.file);
+      axion.uploadImg(form).then(d => {
+          if (d.data.code != 200) {
+            this.$alert(d.data.type, "提示", {});
+            return;
+          }
+          this.imageUrl = d.data.data.url;
+        });
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === "image/jpeg";
@@ -433,6 +440,9 @@ export default {
         this.$message.error("上传头像图片大小不能超过 1MB!");
       }
       return isJPG && isLt2M;
+    },
+    confirmUpload(){
+      
     },
     gotoUserPage(id) {
       const { href } = this.$router.resolve({
@@ -556,4 +566,28 @@ p {
   padding: 10px 0;
   background-color: #f9fafc;
 }
+
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
 </style>
