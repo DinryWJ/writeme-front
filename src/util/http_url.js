@@ -46,13 +46,17 @@ const login = (name, pass) => post('/login/login', name, pass)
 /*注册*/
 const register = (parameters) => post('/user/register', parameters)
 /*发布文章*/
-const publish = (token, title, content, preview, coverImg, corpusId) => post('/article/addArticle', token, title, content, preview, coverImg, corpusId)
+const publish = (token, title, content, preview, coverImg, corpusId) => post('/article/publish', token, title, content, preview, coverImg, corpusId)
+/*重新发布文章*/
+const republish = (token, articleId, title, content, preview, coverImg, corpusId) => post('/article/republish', token, articleId, title, content, preview, coverImg, corpusId)
 /*上传图片*/
 const uploadImg = (file) => post2('/upload/upload', file)
 /*通过id获取文章信息*/
 const getArticleById = (articleId) => post('/article/getArticleById', articleId)
 /*通过Id获取用户信息*/
 const getUserInfoById = (userId) => post('/user/getUserInfoById', userId)
+/*保存文章*/
+const saveArticle = (token, articleId, title, content, corpusId) => post('/article/updateArticle', token, articleId, title, content, corpusId)
 /*通过status获取用户文章列表*/
 const getArticleListByUserId = (userId, status, pageNum, pageSize) => post('/article/getArticleListByUserId', userId, status, pageNum, pageSize);
 /*通过token获取id信息*/
@@ -79,9 +83,11 @@ export default {
   login,
   register,
   publish,
+  republish,
   uploadImg,
   getArticleById,
   getUserInfoById,
+  saveArticle,
   getArticleListByUserId,
   getUserIdByToken,
   addComment,

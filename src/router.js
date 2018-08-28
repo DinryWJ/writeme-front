@@ -48,6 +48,14 @@ const routes = [{
     component: () =>
       import('./views/base/write.vue')
   }, {
+    path: '/edit/:id',
+    name: "edit",
+    meta: {
+      title: "编辑文章"
+    },
+    component: () =>
+      import('./views/base/edit.vue')
+  }, {
     path: '/:id/userPage',
     name: 'userPage',
     meta: {

@@ -39,6 +39,8 @@ export default {
   name: "tinymce",
   data() {
     return {
+      articleId: 0,
+      currentArticleId: "",
       tinymceHtml: "",
       title: "",
       init: {
@@ -68,9 +70,31 @@ export default {
   },
   mounted() {
     tinymce.init({});
+    this.editinit();
   },
   components: { Editor },
   methods: {
+    editinit() {
+      this.currentArticleId = this.$route.params.id;
+      let currentId = this.$cookieStore.getCookie("userId");
+      axion
+        .getArticleById({
+          articleId: this.currentArticleId
+        })
+        .then(d => {
+          if (d.data.code != 200) {
+            this.$alert(d.data.type, "提示", {});
+            return;
+          }
+          if (d.data.data.status == 2 && d.data.data.userId == currentId) {
+            this.articleId = d.data.data.articleId;
+            this.title = d.data.data.title;
+            this.tinymceHtml = d.data.data.articleContent;
+          } else {
+            this.$message("不能编辑这篇文章");
+          }
+        });
+    },
     publish() {
       //获取预览文本
       let activeEditor = tinymce.activeEditor;
@@ -82,22 +106,23 @@ export default {
       }
 
       //获取预览图
-      let regex="src=[\'\"]?([^\'\"]*)[\'\"]?";
+      let regex = "src=['\"]?([^'\"]*)['\"]?";
       let result = this.tinymceHtml.match(regex);
       // let coverImg = result[0].substring(6,result[0].length-2);
       let coverImg;
-      if(result!=null){
+      if (result != null) {
         coverImg = result[1];
-      }else{
+      } else {
         coverImg = "";
       }
       axion
-        .publish({
+        .republish({
           token: this.$cookieStore.getCookie("token"),
+          articleId:this.articleId,
           title: this.title,
           content: this.tinymceHtml,
           preview: preview,
-          coverImg:coverImg,
+          coverImg: coverImg,
           corpusId: 1
         })
         .then(d => {
@@ -107,6 +132,23 @@ export default {
           }
           this.$alert("成功", "提示", {});
           this.$router.push("/");
+        });
+    },
+    save() {
+      axion
+        .saveArticle({
+          token: this.$cookieStore.getCookie("token"),
+          articleId: this.articleId,
+          title: this.title,
+          content: this.tinymceHtml,
+          corpusId: 1
+        })
+        .then(d => {
+          if (d.data.code != 200) {
+            this.$alert(d.data.type, "提示", {});
+            return;
+          }
+          this.$alert("保存成功", "提示", {});
         });
     }
   }

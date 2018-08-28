@@ -29,8 +29,9 @@
                     <!-- 文章列表 -->
                     <h2>文章列表</h2>
                     <el-radio-group v-model="status" size="small" style="float:right" @change="handleRadioChange()">
-                      <el-radio-button label="1">已发布</el-radio-button>
-                      <el-radio-button label="0" v-if="myflag==0">未发布</el-radio-button>
+                      <el-radio-button label=1>已发布</el-radio-button>
+                      <el-radio-button label=0 v-if="myflag==0">审核中</el-radio-button>
+                      <el-radio-button label=2 v-if="myflag==0">待编辑</el-radio-button>
                     </el-radio-group>
                     <br>
                     <br/>
@@ -43,14 +44,15 @@
                                 <h3>{{item.title}}</h3>
                                 <p>{{item.articlePreview}}</p>
                                 <div class="bottom clearfix">
-                                <el-button type="text">{{item.author.userName}}</el-button>
-                                <el-button type="text" icon="el-icon-message">1</el-button>
-                                <el-button type="text" icon="el-icon-star-on">1</el-button>
-                                <el-button type="text" class="button" @click="readFullText(item.articleId)">阅读全文</el-button>
+                                <el-button type="text">{{item.createTime}}</el-button>
+                                <el-button type="text" icon="el-icon-message">{{item.commentNum}}</el-button>
+                                <el-button type="text" icon="el-icon-star-on">{{item.starNum}}</el-button>
+                                <el-button type="text" class="button" v-show="status==1" @click="readFullText(item.articleId)">阅读全文</el-button>
+                                <el-button type="text" class="button" v-show="status==2" @click="gotoEdit(item.articleId)">编辑</el-button>
                                 </div>
                             </div>
                         </div></el-col>
-                        <el-col :span="8"><div class="grid-content"><img v-bind:src="item.coverImg" class="image" /></div></el-col>
+                        <el-col :span="8"><div class="grid-content"><img v-bind:src="item.coverImg" class="image" v-show="item.coverImg !=''"/></div></el-col>
                         </el-row>
                     </el-card>
                     <br/>
@@ -191,7 +193,7 @@ export default {
         sex: "",
         userPermission: "",
         userAbstract: "",
-        status: "",
+        status: 0,
         userImage: ""
       },
       fansCount: 0,
@@ -344,6 +346,15 @@ export default {
       });
       window.open(href, "_blank");
       // this.$router.push("/" + articleId + "/page");
+    },
+    gotoEdit(articleId){
+      const { href } = this.$router.resolve({
+        name: "edit",
+        params: {
+          id: articleId
+        }
+      });
+      window.open(href, "_blank");
     },
     getUserConcernList() {
       axion
