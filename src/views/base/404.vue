@@ -9,5 +9,5 @@ export default {
       notfound: "/404.jpg"
     };
   }
-};
+}
 </script>

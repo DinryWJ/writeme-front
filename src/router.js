@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import layout from "./views/layout.vue";
+import follow from "./views/base/follow.vue";
 Vue.use(Router)
 
 
@@ -25,12 +26,27 @@ const routes = [{
       import('./views/base/search.vue')
   }, {
     path: '/follow',
-    name: 'follow',
     meta: {
       title: "推荐关注"
     },
-    component: () =>
-      import('./views/base/follow.vue')
+    component: follow,
+    children:[{
+      path: '/follow',
+      name: "follow",
+      meta: {
+        title: "推荐文章"
+      },
+      component: () =>
+        import('./views/base/follow/farticle.vue')
+    },{
+      path: '/fuser',
+      name: "fuser",
+      meta: {
+        title: "推荐用户"
+      },
+      component: () =>
+        import('./views/base/follow/fuser.vue')
+    }]
   }, {
     path: '/message',
     name: 'message',
