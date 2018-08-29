@@ -87,6 +87,14 @@ const routes = [{
     },
     component: () =>
       import('./views/my/setting.vue')
+  }, {
+    path: '/404',
+    name: '404',
+    meta: {
+      title: "404"
+    },
+    component: () =>
+      import('./views/base/404.vue')
   }]
 }, {
   path: "/login",

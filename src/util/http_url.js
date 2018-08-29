@@ -49,14 +49,22 @@ const register = (parameters) => post('/user/register', parameters)
 const publish = (token, title, content, preview, coverImg, corpusId) => post('/article/publish', token, title, content, preview, coverImg, corpusId)
 /*重新发布文章*/
 const republish = (token, articleId, title, content, preview, coverImg, corpusId) => post('/article/republish', token, articleId, title, content, preview, coverImg, corpusId)
+/*新增保存文章*/
+const saveArticle = (token, title, content, corpusId) => post('/article/saveArticle', token, title, content, corpusId)
+/*更新保存文章*/
+const updateArticle = (token, articleId, title, content, corpusId) => post('/article/updateArticle', token, articleId, title, content, corpusId)
+/*点赞文章*/
+const likeArticle = (token, articleId) => post('/articleClick/like', token, articleId)
+/*取消点赞文章*/
+const nolikeArticle = (token, articleId) => post('/articleClick/nolike', token, articleId)
+/*点赞状态*/
+const getStarStatus = (token, articleId) => post('/articleClick/judge', token, articleId)
 /*上传图片*/
 const uploadImg = (file) => post2('/upload/upload', file)
 /*通过id获取文章信息*/
 const getArticleById = (articleId) => post('/article/getArticleById', articleId)
 /*通过Id获取用户信息*/
 const getUserInfoById = (userId) => post('/user/getUserInfoById', userId)
-/*保存文章*/
-const saveArticle = (token, articleId, title, content, corpusId) => post('/article/updateArticle', token, articleId, title, content, corpusId)
 /*通过status获取用户文章列表*/
 const getArticleListByUserId = (userId, status, pageNum, pageSize) => post('/article/getArticleListByUserId', userId, status, pageNum, pageSize);
 /*通过token获取id信息*/
@@ -84,10 +92,14 @@ export default {
   register,
   publish,
   republish,
+  saveArticle,
+  updateArticle,
+  nolikeArticle,
+  likeArticle,
+  getStarStatus,
   uploadImg,
   getArticleById,
   getUserInfoById,
-  saveArticle,
   getArticleListByUserId,
   getUserIdByToken,
   addComment,

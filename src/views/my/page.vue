@@ -15,16 +15,17 @@
                       <span>{{page.createTime}}</span>
                       <span> 阅读 </span><span>{{page.readNum}}</span>
                       <span> 评论 </span><span>{{page.commentNum}}</span>
-                      <span> 喜欢 </span><span>{{page.likeNum}}</span>
+                      <span> 点赞 </span><span>{{page.starNum}}</span>
                     </div>
                   </div>
                 </div>
 
                 <p v-html='page.articleContent'></p>
                 <hr/>
-                <div style="height:100px;width:100px;margin:0 auto;">
-                  <img :src="starOn" v-if="starStatus" @click="starchange()" style="width:100%"/>
-                  <img v-else :src="starOff"  @click="starchange()" style="width:100%"/>
+                <div style="height:100px;width:100px;margin:50px auto;">
+                  <img :src="starOn" v-show="starStatus" @click="starchange()" style="width:100%"/>
+                  <img v-show="!starStatus" :src="starOff"  @click="starchange()" style="width:100%"/>
+                  <div style="width：100px;">共有{{page.starNum}}人点赞</div>
                 </div>
                 <h2>写一条评论</h2>
                 <div>
@@ -123,7 +124,7 @@ export default {
         concernStatus: 0,
         readNum: 0,
         commentNum: 0,
-        likeNum: 0
+        starNum: 0
       },
       comments: [],
       comment: {
@@ -170,15 +171,54 @@ export default {
 
           //模拟
           this.page.readNum = 0;
-          this.page.commentNum = 0;
-          this.page.likeNum = 0;
 
           this.validConcern();
           this.initComment();
+          this.initStarStatus();
         });
     },
+    initStarStatus(){
+      axion.getStarStatus({
+                    token: this.$cookieStore.getCookie("token"),
+            articleId: this.page.articleId
+      }).then(d => {
+            if (d.data.code != 200) {
+              this.$alert(d.data.type, "提示", {});
+              return;
+            }
+            this.starStatus =d.data.data;
+          });
+    },
     starchange() {
-      this.starStatus = !this.starStatus;
+      if (this.starStatus == false) {
+        axion
+          .likeArticle({
+            token: this.$cookieStore.getCookie("token"),
+            articleId: this.page.articleId
+          })
+          .then(d => {
+            if (d.data.code != 200) {
+              this.$alert(d.data.type, "提示", {});
+              this.init();
+              return;
+            }
+            this.init();
+          });
+      } else {
+        axion
+          .nolikeArticle({
+            token: this.$cookieStore.getCookie("token"),
+            articleId: this.page.articleId
+          })
+          .then(d => {
+            if (d.data.code != 200) {
+              this.$alert(d.data.type, "提示", {});
+              this.init();
+              return;
+            }
+            this.init();
+          });
+      }
     },
     addComment() {
       if (this.textarea != null) {
@@ -223,10 +263,10 @@ export default {
           });
       }
     },
-    handleConcern(val){
-      if (val ==1) {
+    handleConcern(val) {
+      if (val == 1) {
         this.addConcern();
-      }else{
+      } else {
         this.deleteConcern(this.page.userId);
       }
     },
@@ -234,7 +274,7 @@ export default {
       axion
         .addConcern({
           token: this.$cookieStore.getCookie("token"),
-          concernedUserId:  this.page.userId
+          concernedUserId: this.page.userId
         })
         .then(d => {
           if (d.data.code != 200) {

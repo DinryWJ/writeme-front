@@ -92,6 +92,7 @@ export default {
             this.tinymceHtml = d.data.data.articleContent;
           } else {
             this.$message("不能编辑这篇文章");
+            this.$router.push('/404');
           }
         });
     },
@@ -118,7 +119,7 @@ export default {
       axion
         .republish({
           token: this.$cookieStore.getCookie("token"),
-          articleId:this.articleId,
+          articleId: this.articleId,
           title: this.title,
           content: this.tinymceHtml,
           preview: preview,
@@ -130,13 +131,13 @@ export default {
             this.$alert(d.data.type, "提示", {});
             return;
           }
-          this.$alert("成功", "提示", {});
+          this.$alert("发布成功,请等待审核通过。。", "提示", {});
           this.$router.push("/");
         });
     },
     save() {
       axion
-        .saveArticle({
+        .updateArticle({
           token: this.$cookieStore.getCookie("token"),
           articleId: this.articleId,
           title: this.title,

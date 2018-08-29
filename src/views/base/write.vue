@@ -82,13 +82,13 @@ export default {
       }
 
       //获取预览图
-      let regex="src=[\'\"]?([^\'\"]*)[\'\"]?";
+      let regex = "src=['\"]?([^'\"]*)['\"]?";
       let result = this.tinymceHtml.match(regex);
       // let coverImg = result[0].substring(6,result[0].length-2);
       let coverImg;
-      if(result!=null){
+      if (result != null) {
         coverImg = result[1];
-      }else{
+      } else {
         coverImg = "";
       }
       axion
@@ -97,7 +97,7 @@ export default {
           title: this.title,
           content: this.tinymceHtml,
           preview: preview,
-          coverImg:coverImg,
+          coverImg: coverImg,
           corpusId: 1
         })
         .then(d => {
@@ -105,8 +105,24 @@ export default {
             this.$alert(d.data.type, "提示", {});
             return;
           }
-          this.$alert("成功", "提示", {});
+          this.$alert("发布成功,请等待审核通过。。", "提示", {});
           this.$router.push("/");
+        });
+    },
+    save() {
+      axion
+        .saveArticle({
+          token: this.$cookieStore.getCookie("token"),
+          title: this.title,
+          content: this.tinymceHtml,
+          corpusId: 1
+        })
+        .then(d => {
+          if (d.data.code != 200) {
+            this.$alert(d.data.type, "提示", {});
+            return;
+          }
+          this.$alert("保存成功!", "提示", {});
         });
     }
   }
