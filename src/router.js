@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import layout from "./views/layout.vue";
 import follow from "./views/base/follow.vue";
+import messageFollow from "./views/base/message.vue";
 Vue.use(Router)
 
 
@@ -48,13 +49,20 @@ const routes = [{
         import('./views/base/follow/fuser.vue')
     }]
   }, {
-    path: '/message',
-    name: 'message',
+    path:'/messageFollow',
+    meta:{
+      title: "消息中心"
+    },
+   component:messageFollow,
+   children:[{
+    path: '/messageFollow',
+    name: 'messageFollow',
     meta: {
       title: "消息中心"
     },
     component: () =>
-      import('./views/base/message.vue')
+      import('./views/base/messageFollow/mcomment.vue')
+   }]
   }, {
     path: '/write',
     name: "write",

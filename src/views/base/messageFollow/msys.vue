@@ -1,30 +1,31 @@
 <template>
-<el-row>
-      <el-col :span="24">
-   <div :span="8" v-for="(o, index) in 6" :key="o" :offset="index > 0 ? 2 : 0">
-          <el-card :body-style="{ padding: '0px' }" shadow="hover">
-            <el-row :gutter="20">
-              <el-col :span="16">
-              <div class="grid-content">
-                  <div style="padding: 14px;">
-                    <h3>好吃的汉堡</h3>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste optio iure ut odit nihil voluptatibus officiis nemo nesciunt mollitia ea molestiae laboriosam in, quae asperiores beatae quisquam expedita! Cum, fugit!</p>
-                    <div class="bottom clearfix">
-                      <el-button type="text">鲁迅</el-button>
-                      <el-button type="text" icon="el-icon-message">1</el-button>
-                      <el-button type="text" icon="el-icon-star-on">1</el-button>
-                      <el-button type="text" class="button">阅读全文</el-button>
-                    </div>
-                  </div>
-              </div></el-col>
-              <el-col :span="8"><div class="grid-content"><img :src="pic" class="image" /></div></el-col>
-            </el-row>
-          </el-card>
-          <br/>
+ <el-row :gutter="20">
+      <el-col :span="24" margin-bottom="20px">
+    <div :span="8" v-for="(o, index) in 6" :key="o" :offset="index > 0 ? 2 : 0">
+        <el-card :body-style="{ padding: '0px' }" shadow="hover">
+        <el-container height="100px">
+            <el-aside width="100px" height="70px">
+                <el-badge :value="12" class="item">
+                    <img :src="pic" class="image"/>
+                </el-badge>
+            </el-aside>
+            <el-container>
+                <el-header height="20px">鲁迅</el-header>
+                <el-main height="70px">
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste optio iureut 
+                        odit nihil voluptatibus officiis nemo nesciunt mollitia ea molestiae 
+                         laboriosam in, quae asperiores beatae quisquam expedita! Cum, fugit!
+                    </p>
+                </el-main>
+            </el-container>
+        </el-container>
+        </el-card>
+        <br>
     </div>
       </el-col>
-</el-row>
+ </el-row>
 </template>
+
 <script>
 // @ is an alias to /src
 // import HelloWorld from '@/components/HelloWorld.vue'
@@ -61,6 +62,10 @@ export default {
 };
 </script>
 <style scoped>
+.item {
+  margin-top: 10px;
+  margin-right: 40px;
+}
 .userOperator {
   padding: 20px 0;
   border: 1px solid rgb(252, 252, 252);
@@ -68,6 +73,11 @@ export default {
 .imgbtn {
   width: 100%;
 }
+.el-main{
+    padding-left: 20px;
+    padding-top: 0;
+}
+
 /* 卡片 */
 .time {
   font-size: 13px;
@@ -82,9 +92,8 @@ export default {
   float: right;
 }
 .image {
-  height: 150px;
-  width: 150px;
-  padding-top: 30px;
+  height: 50px;
+  width: 50px;
   display: block;
   margin: 0 auto;
 }
