@@ -2,7 +2,7 @@
     <el-container>
     <el-aside width="300px">    
     <ul class="menu">
-        <li class="active"><el-button icon="el-icon-document" class="asideBtn" @click="go('/messageFollow')">评论</el-button></li>
+        <li class="active"><el-button icon="el-icon-document" class="asideBtn" @click="go('/message')">评论</el-button></li>
         <li class=""><el-button icon="el-icon-service" class="asideBtn" @click="go('/msys')">系统消息</el-button></li>
         <li class=""><el-button icon="el-icon-search" class="asideBtn" @click="go('/mcollect')">关注</el-button></li>
         <li class=""><el-button icon="el-icon-search" class="asideBtn" @click="go('/mlike')">点赞</el-button></li>

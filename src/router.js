@@ -31,7 +31,7 @@ const routes = [{
       title: "推荐关注"
     },
     component: follow,
-    children:[{
+    children: [{
       path: '/follow',
       name: "follow",
       meta: {
@@ -39,7 +39,7 @@ const routes = [{
       },
       component: () =>
         import('./views/base/follow/farticle.vue')
-    },{
+    }, {
       path: '/fuser',
       name: "fuser",
       meta: {
@@ -49,20 +49,44 @@ const routes = [{
         import('./views/base/follow/fuser.vue')
     }]
   }, {
-    path:'/messageFollow',
-    meta:{
-      title: "消息中心"
-    },
-   component:messageFollow,
-   children:[{
-    path: '/messageFollow',
-    name: 'messageFollow',
+    path: '/message',
     meta: {
       title: "消息中心"
     },
-    component: () =>
-      import('./views/base/messageFollow/mcomment.vue')
-   }]
+    component: messageFollow,
+    children: [{
+      path: '/message',
+      name: 'message',
+      meta: {
+        title: "消息中心"
+      },
+      component: () =>
+        import('./views/base/messageFollow/mcomment.vue')
+    }, {
+      path: '/msys',
+      name: 'msys',
+      meta: {
+        title: "消息中心"
+      },
+      component: () =>
+        import('./views/base/messageFollow/msys.vue')
+    }, {
+      path: '/mcollect',
+      name: 'msmcollectys',
+      meta: {
+        title: "消息中心"
+      },
+      component: () =>
+        import('./views/base/messageFollow/mcollect.vue')
+    }, {
+      path: '/mlike',
+      name: 'mlike',
+      meta: {
+        title: "消息中心"
+      },
+      component: () =>
+        import('./views/base/messageFollow/mlike.vue')
+    }]
   }, {
     path: '/write',
     name: "write",
