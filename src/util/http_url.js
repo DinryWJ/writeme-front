@@ -87,6 +87,8 @@ const deleteConcern = (token, concernedUserId) => post('/concern/deleteConcern',
 const getUserConcernList = (userId, pageNum, pageSize) => post('/concern/getUserConcernList', userId, pageNum, pageSize)
 /*获取用户粉丝列表*/
 const getUserFansList = (userId, pageNum, pageSize) => post('/concern/getUserFansList', userId, pageNum, pageSize)
+/*获取我的推荐用户*/
+const getMyRecommentUserList = (token, pageNum, pageSize) => post('/user/getMyRecommentUserList', token, pageNum, pageSize)
 export default {
   login,
   register,
@@ -110,5 +112,6 @@ export default {
   addConcern,
   deleteConcern,
   getUserConcernList,
-  getUserFansList
+  getUserFansList,
+  getMyRecommentUserList
 }

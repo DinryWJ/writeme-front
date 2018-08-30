@@ -71,7 +71,7 @@
                     <!-- 我关注的人列表 -->
                     <h2>关注人列表</h2>
                     <br/>
-                    <div :span="8" v-for="con in concernList" :key="con.concernId">
+                    <div :span="8" v-for="(con,index) in concernList" :key="con.concernId">
                     <el-card :body-style="{ padding: '0px' }" shadow="hover">
                         <el-row>
                         <el-col :span="6"><div class="grid-content">
@@ -84,7 +84,10 @@
                                 <span>{{con.userArticleCount}}</span><span>篇文章,</span><span>{{con.userConcernedCount}}</span><span>个关注</span>
                             </div>
                         </div></el-col>
-                        <el-col :span="6"><div class="grid-content"><el-button style="margin-top:50px;" @click="handleCancleFollow(con.concernedUser.userId)">取消关注</el-button></div></el-col>
+                        <el-col :span="6"><div class="grid-content">
+                          <el-button style="margin-top:50px;" v-show="con.concernedUser.concernStatus==0" @click="handleConcern(1,con.concernedUser.userId,index)">加关注</el-button>
+                          <el-button style="margin-top:50px;" v-show="con.concernedUser.concernStatus==1" @click="handleConcern(0,con.concernedUser.userId,index)">取消关注</el-button>
+                        </div></el-col>
                         </el-row>
                     </el-card>
                     <br/>
@@ -100,7 +103,7 @@
             <el-tab-pane label="被关注">
                     <h2>被关注人列表</h2>
                     <br/>
-                    <div :span="8" v-for="cond in concernedList" :key="cond.concernId">
+                    <div :span="8" v-for="(cond,index) in concernedList" :key="cond.concernId">
                     <el-card :body-style="{ padding: '0px' }" shadow="hover">
                         <el-row>
                         <el-col :span="6"><div class="grid-content">
@@ -113,7 +116,10 @@
                                 <span>{{cond.userArticleCount}}</span><span>篇文章,</span><span>{{cond.userConcernedCount}}</span><span>个关注</span>
                             </div>
                         </div></el-col>
-                        <!-- <el-col :span="6"><div class="grid-content"><el-button style="margin-top:50px;" @click="handleCancleFollow(cond.concernedUser.userId)">加关注</el-button></div></el-col> -->
+                        <el-col :span="6"><div class="grid-content">
+                          <el-button style="margin-top:50px;" v-show="cond.concernerUser.concernStatus==0" @click="handleConcern2(1,cond.concernerUser.userId,index)">加关注</el-button>
+                          <el-button style="margin-top:50px;" v-show="cond.concernerUser.concernStatus==1" @click="handleConcern2(0,cond.concernerUser.userId,index)">取消关注</el-button>
+                          </div></el-col>
                         </el-row>
                     </el-card>
                     <br/>
@@ -259,22 +265,34 @@ export default {
           this.concernStatus = d.data.data > 0 ? 0 : 1;
         });
     },
-    handleCancleFollow(id) {
-      this.deleteConcern(id);
-      this.getUserConcernList();
+    handleConcern(val, id, index) {
+      this.concernList[index].concernedUser.concernStatus = val;
+      if (val == 1) {
+        this.addConcern(id);
+      } else {
+        this.deleteConcern(id);
+      }
+    },    
+    handleConcern2(val, id, index) {
+      this.concernedList[index].concernerUser.concernStatus = val;
+      if (val == 1) {
+        this.addConcern(id);
+      } else {
+        this.deleteConcern(id);
+      }
     },
-    addConcern() {
+    addConcern(id) {
       axion
         .addConcern({
           token: this.$cookieStore.getCookie("token"),
-          concernedUserId: this.currentId
+          concernedUserId: id
         })
         .then(d => {
           if (d.data.code != 200) {
             this.$alert(d.data.type, "提示", {});
             return;
           }
-          this.init();
+
           this.$message("已关注！");
         });
     },
@@ -289,7 +307,7 @@ export default {
             this.$alert(d.data.type, "提示", {});
             return;
           }
-          this.init();
+
           this.$message("已取消关注！");
         });
     },
@@ -347,7 +365,7 @@ export default {
       window.open(href, "_blank");
       // this.$router.push("/" + articleId + "/page");
     },
-    gotoEdit(articleId){
+    gotoEdit(articleId) {
       const { href } = this.$router.resolve({
         name: "edit",
         params: {
@@ -373,8 +391,9 @@ export default {
           this.currentPage2 = d.data.data.pageNum;
         });
     },
-    getUserFansList(){
-      axion.getUserFansList({
+    getUserFansList() {
+      axion
+        .getUserFansList({
           userId: this.currentId,
           pageNum: this.pageNum3,
           pageSize: 10
@@ -428,17 +447,17 @@ export default {
       this.getUserFansList();
     },
     //上传
-    uploadUserImage(f){
+    uploadUserImage(f) {
       console.log(f);
       let form = new FormData();
-      form.append("file",f.file);
+      form.append("file", f.file);
       axion.uploadImg(form).then(d => {
-          if (d.data.code != 200) {
-            this.$alert(d.data.type, "提示", {});
-            return;
-          }
-          this.imageUrl = d.data.data.url;
-        });
+        if (d.data.code != 200) {
+          this.$alert(d.data.type, "提示", {});
+          return;
+        }
+        this.imageUrl = d.data.data.url;
+      });
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === "image/jpeg";
@@ -452,9 +471,7 @@ export default {
       }
       return isJPG && isLt2M;
     },
-    confirmUpload(){
-      
-    },
+    confirmUpload() {},
     gotoUserPage(id) {
       const { href } = this.$router.resolve({
         name: "userPage",
@@ -578,27 +595,27 @@ p {
   background-color: #f9fafc;
 }
 
-  .avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-  .avatar-uploader .el-upload:hover {
-    border-color: #409EFF;
-  }
-  .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 178px;
-    height: 178px;
-    line-height: 178px;
-    text-align: center;
-  }
-  .avatar {
-    width: 178px;
-    height: 178px;
-    display: block;
-  }
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
 </style>

@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import layout from "./views/layout.vue";
 import follow from "./views/base/follow.vue";
 import messageFollow from "./views/base/message.vue";
+import search from "./views/base/search.vue"
 Vue.use(Router)
 
 
@@ -19,12 +20,27 @@ const routes = [{
       import('./views/base/home.vue')
   }, {
     path: '/:searchkey/search',
-    name: 'search',
     meta: {
       title: "搜索"
     },
-    component: () =>
-      import('./views/base/search.vue')
+    component: search,
+    children: [{
+      path: '/:searchkey/search/article',
+      name: "search",
+      meta: {
+        title: "搜索文章"
+      },
+      component: () =>
+        import('./views/base/search/search.vue')
+    },{
+      path: '/:searchkey/search/user',
+      name: "search",
+      meta: {
+        title: "搜索用户"
+      },
+      component: () =>
+        import('./views/base/search/suser.vue')
+    }]
   }, {
     path: '/follow',
     meta: {
