@@ -4,10 +4,11 @@ import layout from "./views/layout.vue";
 import follow from "./views/base/follow.vue";
 import messageFollow from "./views/base/message.vue";
 import search from "./views/base/search.vue"
+import manageLayout from "./views/admin/layout.vue"
 Vue.use(Router)
 
 
-const routes = [{
+const routerMap = [{
   path: "/",
   component: layout,
   children: [{
@@ -181,7 +182,33 @@ const routes = [{
   redirect: '/'
 }]
 
+const sideRoutes=[{
+  path: "/admin/login",
+  name: "adminlogin",
+  meta: {
+    title: "登录"
+  },
+  component: () =>
+    import('./views/admin/login.vue')
+},{
+  path: '/manage',
+  meta: {
+    title: "管理"
+  },
+  component: manageLayout,
+  children: [{
+    path: '/manage',
+    name: 'manage',
+    meta: {
+      title: "消息中心"
+    },
+    component: () =>
+      import('./views/admin/usermanage.vue')
+  }]
+}]
+const routes = [...routerMap, ...sideRoutes]
 var router = new Router({
   routes
 })
 export default router;
+export {sideRoutes}
