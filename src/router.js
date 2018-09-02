@@ -27,7 +27,7 @@ const routerMap = [{
     component: search,
     children: [{
       path: '/:searchkey/search/article',
-      name: "search",
+      name: "searcharticle",
       meta: {
         title: "搜索文章"
       },
@@ -35,7 +35,7 @@ const routerMap = [{
         import('./views/base/search/search.vue')
     },{
       path: '/:searchkey/search/user',
-      name: "search",
+      name: "searchuser",
       meta: {
         title: "搜索用户"
       },
@@ -200,10 +200,41 @@ const sideRoutes=[{
     path: '/manage',
     name: 'manage',
     meta: {
-      title: "消息中心"
+      title: "控制面板"
     },
     component: () =>
-      import('./views/admin/usermanage.vue')
+      import('./views/admin/manage.vue')
+  }, {
+    path: '/articleListManage',
+    name: 'articleListManage',
+    meta: {
+      title: '文章列表',
+    },
+    component: () =>
+      import('./views/admin/articleListManage.vue')
+  },{
+    path: '/articleConfirmManage',
+    name: 'articleConfirmManage',
+    meta:{
+      title:'文章审核',
+    },
+    component:() => import('./views/admin/articleConfirmManage.vue')
+  }, {
+    path: '/articleDetails',
+    name: 'articleDetails',
+    meta: {
+      title: '文章详情',
+    },
+    component: () =>
+      import('./views/admin/articleDetailsManage.vue')
+  }, {
+    path: '/userManage',
+    name: 'userManage',
+    meta: {
+      title: '用户管理',
+    },
+    component: () =>
+      import('./views/admin/userManage.vue')
   }]
 }]
 const routes = [...routerMap, ...sideRoutes]

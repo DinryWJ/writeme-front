@@ -2,39 +2,51 @@
   <div id="app">
     <!-- 其他页 -->
     <el-container >
-      <el-header>
+      <el-header class="navbar">
         <!-- 导航栏 -->
-          
+        <el-row>
+          <el-col :span="2" :offset="20"><div class="grid-content">
+            <el-dropdown @command="handleCommand">
+              <span class="el-dropdown-link">
+                管理员<i class="el-icon-arrow-down el-icon--right"></i>
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="a">设置</el-dropdown-item>
+                <el-dropdown-item command="b">退出</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </div></el-col>
+        </el-row>
       </el-header>
     <el-container>
       <el-aside width="250px">
         <!-- 侧边栏 -->
         <el-row class="tac"> 
           <el-col>
-          <el-menu
-            default-active="1"
+          <el-menu 
+            router
+            :default-active="$route.path"
             class="el-menu-vertical-demo"
             @open="handleOpen"
-            @close="handleClose"
-            background-color="#545c64"
-            text-color="#fff"
-            active-text-color="#ffd04b">
-            <el-menu-item index="1">
+            @close="handleClose">
+            <el-menu-item index="/manage">
               <i class="el-icon-location"></i>
-              <span>导航一</span>
+              <span>控制面板</span>
             </el-menu-item>
-            <el-menu-item index="2">
+            <el-menu-item index="/userManage">
               <i class="el-icon-menu"></i>
-              <span slot="title">导航二</span>
+              <span slot="title">用户管理</span>
             </el-menu-item>
-            <el-menu-item index="3" disabled>
-              <i class="el-icon-document"></i>
-              <span slot="title">导航三</span>
-            </el-menu-item>
-            <el-menu-item index="4">
-              <i class="el-icon-setting"></i>
-              <span slot="title">导航四</span>
-            </el-menu-item>
+            <el-submenu index="/articleListManage">
+            <template slot="title">
+              <i class="el-icon-location"></i>
+              <span>文章管理</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="/articleListManage">文章列表</el-menu-item>
+              <el-menu-item index="/articleConfirmManage">待审核</el-menu-item>
+            </el-menu-item-group>
+            </el-submenu>
           </el-menu>
         </el-col>
         </el-row>
@@ -56,10 +68,51 @@ export default {
     },
     handleClose(key, keyPath) {
       console.log(key, keyPath);
-    }
+    },
+    handleCommand(command) {
+        this.$message('click on item ' + command);
+      }
   }
 };
 </script>
  
 <style scoped>
+.navbar {
+  background-color: slateblue;
+}
+.el-col {
+  border-radius: 4px;
+}
+.bg-purple-dark {
+  background: #99a9bf;
+}
+.bg-purple {
+  background: #d3dce6;
+}
+.bg-purple-light {
+  background: #e5e9f2;
+}
+.grid-content {
+  border-radius: 4px;
+  min-height: 36px;
+}
+.row-bg {
+  padding: 10px 0;
+  background-color: #f9fafc;
+}
+  .el-dropdown-link {
+    line-height: 60px;
+    cursor: pointer;
+    color: #ffffff;
+
+  }
+.el-dropdown {
+  vertical-align: top;
+}
+.el-dropdown + .el-dropdown {
+  margin-left: 15px;
+}
+.el-icon-arrow-down {
+  font-size: 12px;
+}
 </style>
