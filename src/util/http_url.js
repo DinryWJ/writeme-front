@@ -89,6 +89,8 @@ const getUserConcernList = (userId, pageNum, pageSize) => post('/concern/getUser
 const getUserFansList = (userId, pageNum, pageSize) => post('/concern/getUserFansList', userId, pageNum, pageSize)
 /*获取我的推荐用户*/
 const getMyRecommentUserList = (token, pageNum, pageSize) => post('/user/getMyRecommentUserList', token, pageNum, pageSize)
+/*管理员-模糊搜索用户*/
+const getUserListByCondition = (name, flag, pageNum, pageSize) => post('/user/selectUserListByName', name, flag, pageNum, pageSize);
 export default {
   login,
   register,
@@ -113,5 +115,6 @@ export default {
   deleteConcern,
   getUserConcernList,
   getUserFansList,
-  getMyRecommentUserList
+  getMyRecommentUserList,
+  getUserListByCondition
 }
