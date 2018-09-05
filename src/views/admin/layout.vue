@@ -43,7 +43,7 @@
               <span>文章管理</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/articleListManage">文章列表</el-menu-item>
+              <el-menu-item index="/articleListManage">已发布文章列表</el-menu-item>
               <el-menu-item index="/articleConfirmManage">待审核</el-menu-item>
             </el-menu-item-group>
             </el-submenu>

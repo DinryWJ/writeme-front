@@ -91,6 +91,8 @@ const getUserFansList = (userId, pageNum, pageSize) => post('/concern/getUserFan
 const getMyRecommentUserList = (token, pageNum, pageSize) => post('/user/getMyRecommentUserList', token, pageNum, pageSize)
 /*管理员-模糊搜索用户*/
 const getUserListByCondition = (name, flag, pageNum, pageSize) => post('/user/selectUserListByName', name, flag, pageNum, pageSize);
+/*管理员-模糊搜索用户*/
+const getArticleListByCondition = (value, flag, status, pageNum, pageSize) => post('/article/getArticleListByCondition', value, flag, status, pageNum, pageSize);
 export default {
   login,
   register,
@@ -116,5 +118,6 @@ export default {
   getUserConcernList,
   getUserFansList,
   getMyRecommentUserList,
-  getUserListByCondition
+  getUserListByCondition,
+  getArticleListByCondition
 }
