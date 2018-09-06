@@ -3,29 +3,30 @@
       <el-col :span="24" margin-bottom="20px">
     <div :span="8" v-for="item in list" :key="item.userId">
         <el-card :body-style="{ padding: '0px' }" shadow="hover">
-        <el-container >
-            <el-aside width="100px">
-                    <img :src="item.img" class="image"/>  
+        <el-container height="100px">
+            <el-aside width="100px" height="70px">              
+                    <img :src="item.img" class="image"/>                
             </el-aside>
-           <el-container>
-            <el-header> 
-              <el-col>              
-                <el-button type="text" @click="gotoUserPage(item.userId)"> {{item.name}} </el-button>
-                <el-row>                 
-                   <el-col :span="4" style="margin-top:11px;"><small>在文章</small></el-col> 
-                   <el-col :span="20">
-                    <div><el-button style="margin-left:-23px;width:100%;font-size: 20px;" type="text" @click="readFullText(item.articleId)">{{item.articleName}}</el-button>  </div>
-                  </el-col>               
-                </el-row>
-              </el-col>
-            </el-header>
-            
-            <el-main style="margin-top:10px;">
-                <p>{{item.content}}</p>
-            </el-main>
-
-             <el-footer>{{item.time}}</el-footer>
-        </el-container>
+            <el-container>
+                <el-header height="20px">
+                  <el-button type="text" @click="gotoUserPage(item.userId)" style="padding:20px 0 0 0;">
+                  <span>{{item.name}}</span>
+                  </el-button>关注了你
+                </el-header>
+              <br/>
+                <el-main height="70px">
+                  <el-row>
+                    <el-col :span="16">
+                    <p>{{item.time}}</p>
+                    </el-col>
+                    <el-col :span="8">
+                    <el-button  v-if="item.isConcern=='0'" @click="handleAddFollow(item.userId)">关&emsp;&emsp;注</el-button>
+                    <el-button  v-if="item.isConcern=='1'" @click="handleCancleFollow(item.userId)">取消关注</el-button>            
+                    </el-col>
+                  </el-row>
+                </el-main>
+               
+            </el-container>
         </el-container>
         </el-card>
         <br>
@@ -48,9 +49,9 @@
 // import HelloWorld from '@/components/HelloWorld.vue'
 import axion from "@/util/http_url.js"; //接口文件
 import logo from "@/assets/logo.png";
-export default{
-  data(){
-    return{
+export default {
+  data() {
+    return {
       currentId:0,
 
       list:[],
@@ -59,18 +60,17 @@ export default{
     };
   },
   mounted() {
-     this.currentId=this.$cookieStore.getCookie("userId");
+    this.currentId=this.$cookieStore.getCookie("userId");
     this.polling();
   },
-  methods:{
-    getDate() {
-      axion
-        .getCommentList({
-          userId: this.$cookieStore.getCookie("userId"),
-          pageNum: this.pageNum,
-          pageSize: 5
+  methods: {
+    getDate(){
+      axion.getNoReadConcernList({ 
+        userId: this.$cookieStore.getCookie("userId"),
+        pageNum: this.pageNum,
+        pageSize: 5
         })
-        .then(d => {
+           .then(d => {
           if (d.data.code != 200) {
             this.$alert(d.data.type, "提示", {});
             return;
@@ -85,11 +85,45 @@ export default{
       this.pageNum=val;
       this.polling();
       },
-      polling(){
+      handleCancleFollow(id) {
+      this.deleteConcern(id);
+    },
+     handleAddFollow(id) {
+      this.addConcern(id);
+    },
+     deleteConcern(id) {
+      axion
+        .deleteConcern({
+          token: this.$cookieStore.getCookie("token"),
+          concernedUserId: id
+        })
+        .then(d => {
+          if (d.data.code != 200) {
+            this.$alert(d.data.type, "提示", {});
+            return;
+          }
+          this.polling();
+          this.$message("已取消关注！");
+        });
+    },addConcern(id) {
+      axion
+        .addConcern({
+          token: this.$cookieStore.getCookie("token"),
+          concernedUserId: id
+        })
+        .then(d => {
+          if (d.data.code != 200) {
+            this.$alert(d.data.type, "提示", {});
+            return;
+          }
+          this.polling();
+          this.$message("已关注！");
+        });
+    },polling(){
       this.getDate(); 
        var str = location.href; 
        var arr=str.split('/');    
-      if(arr[arr.length-1]=='message'){          
+      if(arr[arr.length-1]=='mcollect'){          
       console.log('请求成功');
         setTimeout(()=>{
           this.polling()
@@ -99,15 +133,7 @@ export default{
         return;
       }
     },
-    readFullText(articleId) {
-      const { href } = this.$router.resolve({
-        name: "page",
-        params: {
-          id: articleId
-        }
-      });
-      window.open(href, "_blank");
-    }, gotoUserPage(id) {
+      gotoUserPage(id) {
       const { href } = this.$router.resolve({
         name: "userPage",
         params: {
@@ -116,49 +142,11 @@ export default{
       });
       window.open(href, "_blank");
     }
+    
   }
 };
 </script>
 <style scoped>
-.el-button{
-  text-align: left;
-}
- .el-row {
-    margin-bottom: 20px;
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-  .el-col {
-    border-radius: 4px;
-  }
-  .bg-purple-dark {
-    background: #99a9bf;
-  }
-  .bg-purple {
-    background: #d3dce6;
-  }
-  .bg-purple-light {
-    background: #e5e9f2;
-  }
-  .grid-content {
-    border-radius: 4px;
-    min-height: 36px;
-  }
-  .row-bg {
-    padding: 10px 0;
-    background-color: #f9fafc;
-  }
-.el-aside{
-  margin-top:20px;
-}
-.el-button{
-overflow: hidden;
-text-overflow: ellipsis;
-display: -webkit-box;
--webkit-line-clamp: 0.2;
--webkit-box-orient: vertical;
-}
 .item {
   margin-top: 10px;
   margin-right: 40px;
@@ -210,5 +198,8 @@ p {
   word-break: break-all;
   display: -webkit-box;
   -webkit-box-orient: vertical;
+}
+.el-aside{
+  margin-top:20px;
 }
 </style>

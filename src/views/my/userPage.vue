@@ -62,7 +62,7 @@
                       <el-pagination 
                       @current-change="handleCurrentChange" 
                       :current-page.sync="pageNum" 
-                      :page-size="10" 
+                      :page-size="5" 
                       :total="total">
                       </el-pagination>
                     </section>
@@ -325,7 +325,7 @@ export default {
           userId: this.currentId,
           status: this.status,
           pageNum: this.pageNum,
-          pageSize: 10
+          pageSize: 5
         })
         .then(d => {
           if (d.data.code != 200) {

@@ -2,10 +2,26 @@
     <el-container>
     <el-aside width="300px">    
     <ul class="menu">
-        <li class="active"><el-button icon="el-icon-document" class="asideBtn" @click="go('/message')">评论</el-button></li>
-        <li class=""><el-button icon="el-icon-service" class="asideBtn" @click="go('/msys')">系统消息</el-button></li>
-        <li class=""><el-button icon="el-icon-search" class="asideBtn" @click="go('/mcollect')">关注</el-button></li>
-        <li class=""><el-button icon="el-icon-search" class="asideBtn" @click="go('/mlike')">点赞</el-button></li>
+        <li class="active" margin-top="10px;">
+            <el-badge :value="12" :max="99" class="item">
+                <el-button icon="el-icon-document" class="asideBtn" @click="go('/message')">评论</el-button>
+            </el-badge>
+        </li>
+        <li class="">
+              <el-badge :value="12" :max="99" class="item">
+            <el-button icon="el-icon-service" class="asideBtn" @click="go('/msys')">系统消息</el-button>
+              </el-badge>
+        </li>
+        <li class="">
+              <el-badge :value="12" :max="99" class="item">
+            <el-button icon="el-icon-search" class="asideBtn" @click="go('/mcollect')">关注</el-button>
+              </el-badge>
+        </li>
+        <li class="">
+              <el-badge :value="12" :max="99" class="item">
+            <el-button icon="el-icon-search" class="asideBtn" @click="go('/mlike')">点赞</el-button>
+              </el-badge>
+        </li>
     </ul>
     </el-aside>
     <el-container>
@@ -31,17 +47,22 @@ export default {
 </script>
 
 <style scoped>
+.el-aside,.el-main{
+ overflow: hidden;
+}
     ul,li{
-        padding: 0;
+       padding-top: 15px;
         margin:0;
+
     }
     .menu{
         list-style:none;
         width: 100%;
     }
-    .asideBtn{
+    .asideBtn{~
         height: 50px;
-        width: 100%;
+        width: 150px;
         border: none;
     }
+    
 </style>

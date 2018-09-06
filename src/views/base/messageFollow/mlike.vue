@@ -1,24 +1,21 @@
 <template>
  <el-row :gutter="20">
       <el-col :span="24" margin-bottom="20px">
-    <div :span="8" v-for="(o, index) in 6" :key="o" :offset="index > 0 ? 2 : 0">
+     <div :span="8" v-for="item in list" :key="item.name">
         <el-card :body-style="{ padding: '0px' }" shadow="hover">
         <el-container height="100px">
             <el-aside width="100px" height="70px">
-                <el-badge :value="12" class="item">
+               
                     <img :src="pic" class="image"/>
-                </el-badge>
+                
             </el-aside>
             <el-container>
-                <el-aside height="20px">鲁迅</el-aside>
+                <el-header height="20px">{{item.name}}<span>点赞了你的文章</span>{{item.articleName}}</el-header>
             
-                <el-main height="70px">
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste optio iureut 
-                        odit nihil voluptatibus officiis nemo nesciunt mollitia ea molestiae 
-                         laboriosam in, quae asperiores beatae quisquam expedita! Cum, fugit!
-                    </p>
+                <el-main height="70px">    
+                    <p>{{item.time}</p>                    
                 </el-main>
-
+               
             </el-container>
         </el-container>
         </el-card>
@@ -31,35 +28,29 @@
 <script>
 // @ is an alias to /src
 // import HelloWorld from '@/components/HelloWorld.vue'
+import axion from "@/util/http_url.js"; //接口文件
 import logo from "@/assets/logo.png";
 export default {
   data() {
     return {
-      pic: logo,
-      currentDate: new Date(),
-      loginStatus: false,
-      dialogVisible: false,
-      textarea:''
+     list:[]
     };
   },
   mounted() {
-    this.init();
+    this.getDate();
   },
   methods: {
-    init() {
-      let name = this.$cookieStore.getCookie("token");
-      if (name != null) {
-        this.loginStatus = true;
-      } else {
-        this.loginStatus = false;
-      }
-    },
-    dowrite(){
-      this.$router.push('/write');
-    },
-    domind(){
-
+    getDate(){
+      axion.getLikeList({ token: this.$cookieStore.getCookie("token")})
+           .then(d => {
+          if (d.data.code != 200) {
+            this.$alert(d.data.type, "提示", {});
+            return;
+          }
+          this.list=d.data.data;
+        });
     }
+    
   }
 };
 </script>

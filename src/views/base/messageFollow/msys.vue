@@ -5,9 +5,9 @@
         <el-card :body-style="{ padding: '0px' }" shadow="hover">
         <el-container height="100px">
             <el-aside width="100px" height="70px">
-                <el-badge :value="12" class="item">
+                
                     <img :src="pic" class="image"/>
-                </el-badge>
+             
             </el-aside>
             <el-container>
                 <el-header height="20px">鲁迅</el-header>
@@ -29,6 +29,7 @@
 <script>
 // @ is an alias to /src
 // import HelloWorld from '@/components/HelloWorld.vue'
+import axion from "@/util/http_url.js"; //接口文件
 import logo from "@/assets/logo.png";
 export default {
   data() {

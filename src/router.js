@@ -77,7 +77,7 @@ const routes = [{
         title: "消息中心"
       },
       component: () =>
-        import('./views/base/messageFollow/mcollect.vue')
+        import('./views/base/messageFollow/mconcern.vue')
     }, {
       path: '/mlike',
       name: 'mlike',
