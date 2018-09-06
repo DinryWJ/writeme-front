@@ -3,10 +3,12 @@ import Router from 'vue-router'
 import layout from "./views/layout.vue";
 import follow from "./views/base/follow.vue";
 import messageFollow from "./views/base/message.vue";
+import search from "./views/base/search.vue"
+import manageLayout from "./views/admin/layout.vue"
 Vue.use(Router)
 
 
-const routes = [{
+const routerMap = [{
   path: "/",
   component: layout,
   children: [{
@@ -19,12 +21,27 @@ const routes = [{
       import('./views/base/home.vue')
   }, {
     path: '/:searchkey/search',
-    name: 'search',
     meta: {
       title: "搜索"
     },
-    component: () =>
-      import('./views/base/search.vue')
+    component: search,
+    children: [{
+      path: '/:searchkey/search/article',
+      name: "searcharticle",
+      meta: {
+        title: "搜索文章"
+      },
+      component: () =>
+        import('./views/base/search/search.vue')
+    },{
+      path: '/:searchkey/search/user',
+      name: "searchuser",
+      meta: {
+        title: "搜索用户"
+      },
+      component: () =>
+        import('./views/base/search/suser.vue')
+    }]
   }, {
     path: '/follow',
     meta: {
@@ -165,7 +182,64 @@ const routes = [{
   redirect: '/'
 }]
 
+const sideRoutes=[{
+  path: "/admin/login",
+  name: "adminlogin",
+  meta: {
+    title: "登录"
+  },
+  component: () =>
+    import('./views/admin/login.vue')
+},{
+  path: '/manage',
+  meta: {
+    title: "管理"
+  },
+  component: manageLayout,
+  children: [{
+    path: '/manage',
+    name: 'manage',
+    meta: {
+      title: "控制面板"
+    },
+    component: () =>
+      import('./views/admin/manage.vue')
+  }, {
+    path: '/articleListManage',
+    name: 'articleListManage',
+    meta: {
+      title: '文章列表',
+    },
+    component: () =>
+      import('./views/admin/articleListManage.vue')
+  },{
+    path: '/articleConfirmManage',
+    name: 'articleConfirmManage',
+    meta:{
+      title:'文章审核',
+    },
+    component:() => import('./views/admin/articleConfirmManage.vue')
+  }, {
+    path: '/articleDetails',
+    name: 'articleDetails',
+    meta: {
+      title: '文章详情',
+    },
+    component: () =>
+      import('./views/admin/articleDetailsManage.vue')
+  }, {
+    path: '/userManage',
+    name: 'userManage',
+    meta: {
+      title: '用户管理',
+    },
+    component: () =>
+      import('./views/admin/userManage.vue')
+  }]
+}]
+const routes = [...routerMap, ...sideRoutes]
 var router = new Router({
   routes
 })
 export default router;
+export {sideRoutes}

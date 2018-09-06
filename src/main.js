@@ -5,7 +5,8 @@ import router from './router'
 import ElementUI from 'element-ui'
 import { changeTitle } from '@/util'
 import './plugins/element.js'
-import { addCookie, getCookie, delCookie } from './util/cookie.js';
+import './util/normalize.css'
+import { addCookie, getCookie, delCookie } from './util/cookie.js'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI);
