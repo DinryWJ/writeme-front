@@ -87,21 +87,18 @@ const deleteConcern = (token, concernedUserId) => post('/concern/deleteConcern',
 const getUserConcernList = (userId, pageNum, pageSize) => post('/concern/getUserConcernList', userId, pageNum, pageSize)
 /*获取用户粉丝列表*/
 const getUserFansList = (userId, pageNum, pageSize) => post('/concern/getUserFansList', userId, pageNum, pageSize)
-<<<<<<< HEAD
 /*获取未读评论消息 */
 const getCommentList = (userId,pageNum,pageSize) => post('/comment/getCommentList',userId,pageNum,pageSize)
 /*获取未读关注消息 */
 const getNoReadConcernList = (token) => post('/concern/getNoReadConcernList',token)
 /*获取未读点赞消息 */
 const getLikeList = (token) => post('/article_click/getNoReadlikeList',token)
-=======
 /*获取我的推荐用户*/
 const getMyRecommentUserList = (token, pageNum, pageSize) => post('/user/getMyRecommentUserList', token, pageNum, pageSize)
 /*管理员-模糊搜索用户*/
 const getUserListByCondition = (name, flag, pageNum, pageSize) => post('/user/selectUserListByName', name, flag, pageNum, pageSize);
 /*管理员-模糊搜索用户*/
 const getArticleListByCondition = (value, flag, status, pageNum, pageSize) => post('/article/getArticleListByCondition', value, flag, status, pageNum, pageSize);
->>>>>>> 8a48db48951f1193523aaae136575566888bf05c
 export default {
   login,
   register,
@@ -126,13 +123,10 @@ export default {
   deleteConcern,
   getUserConcernList,
   getUserFansList,
-<<<<<<< HEAD
   getCommentList,
   getNoReadConcernList,
-  getLikeList
-=======
+  getLikeList,
   getMyRecommentUserList,
   getUserListByCondition,
   getArticleListByCondition
->>>>>>> 8a48db48951f1193523aaae136575566888bf05c
 }
