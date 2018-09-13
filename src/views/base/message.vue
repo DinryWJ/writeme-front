@@ -59,7 +59,7 @@ export default {
         list-style:none;
         width: 100%;
     }
-    .asideBtn{~
+    .asideBtn{
         height: 50px;
         width: 150px;
         border: none;

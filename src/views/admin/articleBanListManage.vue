@@ -67,7 +67,7 @@
           <el-button
               size="mini"
               type="danger"
-              @click="handleDelete(scope.$index, scope.row)">封禁</el-button>
+              @click="handleDelete(scope.$index, scope.row)">解封</el-button>
           </template>
       </el-table-column>
   </el-table>
@@ -111,7 +111,7 @@ export default {
         .getArticleListByCondition({
           value: this.input,
           flag: this.select,
-          status: 1,
+          status: 8,
           pageNum: this.pageNum,
           pageSize: 10
         })
@@ -132,25 +132,19 @@ export default {
       this.multipleSelection = val;
     },
     handleEdit(index, row) {
-      const { href } = this.$router.resolve({
-        name: "page",
-        params: {
-          id: row.articleId
-        }
-      });
-      window.open(href, "_blank");
+      this.$router.push('/articleDetails/'+row.articleId);
     },
     handleDelete(index, row) {
       axion.articleManage({
         token:this.$cookieStore.getCookie("token"),
         articleId:row.articleId,
-        status:8
+        status: 1
       }).then(d => {
           if (d.data.code != 200) {
             this.$alert(d.data.type, "提示", {});
             return;
           }
-          this.$message('封禁成功');
+          this.$message('解封成功');
           this.getArticleListByCondition();
         });
     },

@@ -64,10 +64,10 @@
           <el-button
               size="mini"
               @click="handleEdit(scope.$index, scope.row)">查看</el-button>
-          <el-button
+          <!-- <el-button
               size="mini"
               type="danger"
-              @click="handleDelete(scope.$index, scope.row)">操作</el-button>
+              @click="handleDelete(scope.$index, scope.row)">操作</el-button> -->
           </template>
       </el-table-column>
   </el-table>
@@ -133,10 +133,11 @@ export default {
     },
     handleEdit(index, row) {
       console.log(index, row);
+      this.$router.push('/articleDetails/'+row.articleId);
     },
-    handleDelete(index, row) {
-      console.log(index, row);
-    },
+    // handleDelete(index, row) {
+    //   console.log(index, row);
+    // },
     //分页方法
     handleCurrentChange(val) {
       this.getArticleListByCondition();

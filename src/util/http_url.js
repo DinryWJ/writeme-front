@@ -53,6 +53,8 @@ const republish = (token, articleId, title, content, preview, coverImg, corpusId
 const saveArticle = (token, title, content, corpusId) => post('/article/saveArticle', token, title, content, corpusId)
 /*更新保存文章*/
 const updateArticle = (token, articleId, title, content, corpusId) => post('/article/updateArticle', token, articleId, title, content, corpusId)
+/*删除文章*/
+const deleteArticle = (token, articleId) =>post('/article/deleteArticle',token,articleId)
 /*点赞文章*/
 const likeArticle = (token, articleId) => post('/articleClick/like', token, articleId)
 /*取消点赞文章*/
@@ -99,6 +101,10 @@ const getMyRecommentUserList = (token, pageNum, pageSize) => post('/user/getMyRe
 const getUserListByCondition = (name, flag, pageNum, pageSize) => post('/user/selectUserListByName', name, flag, pageNum, pageSize);
 /*管理员-模糊搜索用户*/
 const getArticleListByCondition = (value, flag, status, pageNum, pageSize) => post('/article/getArticleListByCondition', value, flag, status, pageNum, pageSize);
+/*管理员-文章封禁解封管理*/
+const articleManage = (token,articleId,status) =>post('/manage/articleManage',token,articleId,status)
+/*管理员-文章审核*/
+const articlePassInfo = (token,articleId,status,msg) =>post('/manage/articlePassInfo',token,articleId,status,msg)
 export default {
   login,
   register,
@@ -106,6 +112,7 @@ export default {
   republish,
   saveArticle,
   updateArticle,
+  deleteArticle,
   nolikeArticle,
   likeArticle,
   getStarStatus,
@@ -128,5 +135,7 @@ export default {
   getLikeList,
   getMyRecommentUserList,
   getUserListByCondition,
-  getArticleListByCondition
+  getArticleListByCondition,
+  articleManage,
+  articlePassInfo
 }

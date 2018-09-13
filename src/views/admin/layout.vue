@@ -26,9 +26,7 @@
           <el-menu 
             router
             :default-active="$route.path"
-            class="el-menu-vertical-demo"
-            @open="handleOpen"
-            @close="handleClose">
+            class="el-menu-vertical-demo">
             <el-menu-item index="/manage">
               <i class="el-icon-location"></i>
               <span>控制面板</span>
@@ -45,6 +43,7 @@
             <el-menu-item-group>
               <el-menu-item index="/articleListManage">已发布文章列表</el-menu-item>
               <el-menu-item index="/articleConfirmManage">待审核</el-menu-item>
+              <el-menu-item index="/articleBanListManage">封禁管理</el-menu-item>
             </el-menu-item-group>
             </el-submenu>
           </el-menu>
@@ -63,12 +62,6 @@
 <script>
 export default {
   methods: {
-    handleOpen(key, keyPath) {
-      console.log(key, keyPath);
-    },
-    handleClose(key, keyPath) {
-      console.log(key, keyPath);
-    },
     handleCommand(command) {
         this.$message('click on item ' + command);
       }

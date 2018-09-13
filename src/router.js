@@ -218,9 +218,18 @@ const sideRoutes=[{
     meta:{
       title:'文章审核',
     },
-    component:() => import('./views/admin/articleConfirmManage.vue')
+    component:() => 
+      import('./views/admin/articleConfirmManage.vue')
+  },{
+    path: '/articleBanListManage',
+    name: 'articleBanListManage',
+    meta:{
+      title:'文章封禁管理',
+    },
+    component:() => 
+      import('./views/admin/articleBanListManage.vue')
   }, {
-    path: '/articleDetails',
+    path: '/articleDetails/:id',
     name: 'articleDetails',
     meta: {
       title: '文章详情',
