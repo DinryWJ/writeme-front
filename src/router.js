@@ -244,6 +244,14 @@ const sideRoutes=[{
     },
     component: () =>
       import('./views/admin/userManage.vue')
+  },{
+    path: '/userBanManage',
+    name: 'userBanManage',
+    meta: {
+      title: '封禁管理',
+    },
+    component: () =>
+      import('./views/admin/userBanManage.vue')
   }]
 }]
 const routes = [...routerMap, ...sideRoutes]

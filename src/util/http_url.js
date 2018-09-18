@@ -98,8 +98,10 @@ const getLikeList = (token) => post('/article_click/getNoReadlikeList',token)
 /*获取我的推荐用户*/
 const getMyRecommentUserList = (token, pageNum, pageSize) => post('/user/getMyRecommentUserList', token, pageNum, pageSize)
 /*管理员-模糊搜索用户*/
-const getUserListByCondition = (name, flag, pageNum, pageSize) => post('/user/selectUserListByName', name, flag, pageNum, pageSize);
-/*管理员-模糊搜索用户*/
+const getUserListByCondition = (name, flag, status, pageNum, pageSize) => post('/user/selectUserListByName', name, flag, status, pageNum, pageSize);
+/*管理员-用户封禁管理*/
+const userManage = (token,currentId,status) => post('/manage/userManage',token,currentId,status);
+/*管理员-文章模糊搜索*/
 const getArticleListByCondition = (value, flag, status, pageNum, pageSize) => post('/article/getArticleListByCondition', value, flag, status, pageNum, pageSize);
 /*管理员-文章封禁解封管理*/
 const articleManage = (token,articleId,status) =>post('/manage/articleManage',token,articleId,status)
@@ -135,6 +137,7 @@ export default {
   getLikeList,
   getMyRecommentUserList,
   getUserListByCondition,
+  userManage,
   getArticleListByCondition,
   articleManage,
   articlePassInfo

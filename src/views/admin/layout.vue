@@ -28,16 +28,22 @@
             :default-active="$route.path"
             class="el-menu-vertical-demo">
             <el-menu-item index="/manage">
-              <i class="el-icon-location"></i>
+              <i class="el-icon-info"></i>
               <span>控制面板</span>
             </el-menu-item>
-            <el-menu-item index="/userManage">
-              <i class="el-icon-menu"></i>
-              <span slot="title">用户管理</span>
-            </el-menu-item>
+            <el-submenu index="/userManage">
+            <template slot="title">
+              <i class="el-icon-service"></i>
+              <span>用户管理</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="/userManage">用户列表</el-menu-item>
+              <el-menu-item index="/userBanManage">封禁用户</el-menu-item>
+            </el-menu-item-group>
+            </el-submenu>
             <el-submenu index="/articleListManage">
             <template slot="title">
-              <i class="el-icon-location"></i>
+              <i class="el-icon-edit-outline"></i>
               <span>文章管理</span>
             </template>
             <el-menu-item-group>
