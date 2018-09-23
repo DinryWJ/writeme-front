@@ -13,19 +13,19 @@
 
         <h2>推荐内容</h2>
         <br/>
-        <div :span="8" v-for="(o, index) in 6" :key="o" :offset="index > 0 ? 2 : 0">
+        <div :span="8" v-for="item in list" :key="item.userId" >
           <el-card :body-style="{ padding: '0px' }" shadow="hover">
             <el-row :gutter="20">
               <el-col :span="16">
               <div class="grid-content">
                   <div style="padding: 14px;">
-                    <h3>好吃的汉堡</h3>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste optio iure ut odit nihil voluptatibus officiis nemo nesciunt mollitia ea molestiae laboriosam in, quae asperiores beatae quisquam expedita! Cum, fugit!</p>
+                    <h3>{{item.title}}</h3>
+                    <p>{{item.articlePreview}}</p>
                     <div class="bottom clearfix">
-                      <el-button type="text">鲁迅</el-button>
+                      <el-button type="text">{{item.author.userName}}</el-button>
                       <el-button type="text" icon="el-icon-message">1</el-button>
                       <el-button type="text" icon="el-icon-star-on">1</el-button>
-                      <el-button type="text" class="button">阅读全文</el-button>
+                      <el-button type="text" class="button" @click="readFullText(item.articleId)">阅读全文</el-button>
                     </div>
                   </div>
               </div></el-col>
@@ -34,6 +34,15 @@
           </el-card>
           <br/>
         </div>
+       <!-- 分页 -->
+    <section class="margintop20 textAlignRight">
+      <el-pagination 
+      @current-change="handleCurrentChange" 
+      :current-page.sync="pageNum" 
+      :page-size="5" 
+      :total="total">
+      </el-pagination>
+    </section>
 
       </el-col>
       <el-col :span="8"><div class="grid-content" >
@@ -76,6 +85,7 @@
 <script>
 // @ is an alias to /src
 // import HelloWorld from '@/components/HelloWorld.vue'
+import axion from "@/util/http_url.js"; //接口文件
 import logo from "@/assets/logo.png";
 export default {
   data() {
@@ -84,7 +94,12 @@ export default {
       currentDate: new Date(),
       loginStatus: false,
       dialogVisible: false,
-      textarea:''
+      textarea:'',
+
+      currentId:0,
+      list:[],
+      pageNum: 1,
+      total:0
     };
   },
   mounted() {
@@ -95,9 +110,41 @@ export default {
       let name = this.$cookieStore.getCookie("token");
       if (name != null) {
         this.loginStatus = true;
+         this.getDate();
       } else {
         this.loginStatus = false;
       }
+    },
+     getDate() {
+      axion
+        .getMyRecommentArticleList({
+          userId: this.$cookieStore.getCookie("userId"),
+          pageNum: this.pageNum,
+          pageSize: 5
+        })
+        .then(d => {
+          if (d.data.code != 200) {
+            this.$alert(d.data.type, "提示", {});
+            return;
+          }
+          this.list = d.data.data.list;
+          this.total = d.data.data.total;
+          this.currentPage = d.data.data.pageNum;
+        });
+    },
+      handleCurrentChange(val) {
+        console.log(`每页 ${val} 条`);
+        this.pageNum=val;
+        this.getDate();
+      },
+    readFullText(articleId) {
+      const { href } = this.$router.resolve({
+        name: "page",
+        params: {
+          id: articleId
+        }
+      });
+      window.open(href, "_blank");
     },
     dowrite(){
       this.$router.push('/write');

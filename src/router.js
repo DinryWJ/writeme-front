@@ -243,7 +243,7 @@ const sideRoutes=[{
       title: '用户管理',
     },
     component: () =>
-      import('./views/admin/userManage.vue')
+      import('./views/admin/usermanage.vue')
   }]
 }]
 const routes = [...routerMap, ...sideRoutes]

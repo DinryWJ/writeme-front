@@ -45,6 +45,8 @@ const post2 = (_url, body) => axios.post(_url, body, modelBase).then(codeerror).
 const login = (name, pass) => post('/login/login', name, pass)
 /*注册*/
 const register = (parameters) => post('/user/register', parameters)
+/*主页个性推荐文章*/
+const getMyRecommentArticleList = (userId, pageNum, pageSize) => post('/article/getMyRecommentArticleList', userId, pageNum, pageSize)
 /*发布文章*/
 const publish = (token, title, content, preview, coverImg, corpusId) => post('/article/publish', token, title, content, preview, coverImg, corpusId)
 /*重新发布文章*/
@@ -108,6 +110,7 @@ const articlePassInfo = (token,articleId,status,msg) =>post('/manage/articlePass
 export default {
   login,
   register,
+  getMyRecommentArticleList,
   publish,
   republish,
   saveArticle,
