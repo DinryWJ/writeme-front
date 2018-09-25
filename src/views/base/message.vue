@@ -2,17 +2,17 @@
     <el-container>
     <el-aside width="300px">    
     <ul class="menu">
-        <li class="active" margin-top="10px;">
+        <!-- <li class="active" margin-top="10px;">
             <el-badge :value="12" :max="99" class="item">
                 <el-button icon="el-icon-document" class="asideBtn" @click="go('/message')">评论</el-button>
             </el-badge>
-        </li>
-        <li class="">
+        </li> -->
+        <li class="active">
               <el-badge :value="12" :max="99" class="item">
-            <el-button icon="el-icon-service" class="asideBtn" @click="go('/msys')">系统消息</el-button>
+            <el-button icon="el-icon-service" class="asideBtn" @click="go('/message')">我的消息</el-button>
               </el-badge>
         </li>
-        <li class="">
+        <!-- <li class="">
               <el-badge :value="12" :max="99" class="item">
             <el-button icon="el-icon-search" class="asideBtn" @click="go('/mcollect')">关注</el-button>
               </el-badge>
@@ -21,7 +21,7 @@
               <el-badge :value="12" :max="99" class="item">
             <el-button icon="el-icon-search" class="asideBtn" @click="go('/mlike')">点赞</el-button>
               </el-badge>
-        </li>
+        </li> -->
     </ul>
     </el-aside>
     <el-container>

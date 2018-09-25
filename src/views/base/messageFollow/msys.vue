@@ -1,27 +1,21 @@
 <template>
  <el-row :gutter="20">
       <el-col :span="24" margin-bottom="20px">
-    <div :span="8" v-for="(o, index) in 6" :key="o" :offset="index > 0 ? 2 : 0">
-        <el-card :body-style="{ padding: '0px' }" shadow="hover">
-        <el-container height="100px">
-            <el-aside width="100px" height="70px">
-                
-                    <img :src="pic" class="image"/>
-             
+      <span>全部消息</span>
+      <hr/>
+      <div :span="8" v-for="m in message" :key="m.id">
+        <el-container height="100px" >
+            <el-aside width="100px" height="100px" style="padding:18px;"> 
+              <img :src="m.user.userImage" class="image"/>
             </el-aside>
-            <el-container>
-                <el-header height="20px">鲁迅</el-header>
-                <el-main height="70px">
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste optio iureut 
-                        odit nihil voluptatibus officiis nemo nesciunt mollitia ea molestiae 
-                         laboriosam in, quae asperiores beatae quisquam expedita! Cum, fugit!
-                    </p>
-                </el-main>
-            </el-container>
+            <el-main>
+              <div v-on:click="go(m.user.userId)" style="cursor: pointer;">
+                <div style="font-size: 20px;margin-top: 20px;">{{m.user.userName}} <span style="float:right;font-size:12px;">{{m.createTime}}</span></div>
+                <div><span class="messagebox">{{m.message}}</span></div>
+              </div>
+            </el-main>
         </el-container>
-        </el-card>
-        <br>
-    </div>
+      </div>
       </el-col>
  </el-row>
 </template>
@@ -35,10 +29,7 @@ export default {
   data() {
     return {
       pic: logo,
-      currentDate: new Date(),
-      loginStatus: false,
-      dialogVisible: false,
-      textarea:''
+      message:[]
     };
   },
   mounted() {
@@ -46,23 +37,37 @@ export default {
   },
   methods: {
     init() {
-      let name = this.$cookieStore.getCookie("token");
-      if (name != null) {
-        this.loginStatus = true;
-      } else {
-        this.loginStatus = false;
-      }
+      this.getMessageList();
     },
-    dowrite(){
-      this.$router.push('/write');
+    getMessageList() {
+      axion
+        .getUserMessageList({
+          token: this.$cookieStore.getCookie("token"),
+          status: 0
+        })
+        .then(d => {
+          if (d.data.code != 200) {
+            this.$alert(d.data.type, "提示", {});
+            return;
+          }
+          this.message = d.data.data.list;
+          console.log(this.message)
+        });
     },
-    domind(){
-
+    go(id){
+      this.$router.push('/mdetail/'+id)      
     }
   }
 };
 </script>
 <style scoped>
+.messagebox{
+    font-size: 12px;
+    color: #999;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 .item {
   margin-top: 10px;
   margin-right: 40px;
@@ -74,9 +79,9 @@ export default {
 .imgbtn {
   width: 100%;
 }
-.el-main{
-    padding-left: 20px;
-    padding-top: 0;
+.el-main {
+  padding-left: 20px;
+  padding-top: 0;
 }
 
 /* 卡片 */
@@ -93,8 +98,8 @@ export default {
   float: right;
 }
 .image {
-  height: 50px;
-  width: 50px;
+  width: 100%;
+  border-radius: 100%;
   display: block;
   margin: 0 auto;
 }
@@ -115,5 +120,4 @@ p {
   display: -webkit-box;
   -webkit-box-orient: vertical;
 }
-
 </style>

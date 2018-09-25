@@ -54,7 +54,7 @@ const saveArticle = (token, title, content, corpusId) => post('/article/saveArti
 /*更新保存文章*/
 const updateArticle = (token, articleId, title, content, corpusId) => post('/article/updateArticle', token, articleId, title, content, corpusId)
 /*删除文章*/
-const deleteArticle = (token, articleId) =>post('/article/deleteArticle',token,articleId)
+const deleteArticle = (token, articleId) => post('/article/deleteArticle', token, articleId)
 /*点赞文章*/
 const likeArticle = (token, articleId) => post('/articleClick/like', token, articleId)
 /*取消点赞文章*/
@@ -90,23 +90,27 @@ const getUserConcernList = (userId, pageNum, pageSize) => post('/concern/getUser
 /*获取用户粉丝列表*/
 const getUserFansList = (userId, pageNum, pageSize) => post('/concern/getUserFansList', userId, pageNum, pageSize)
 /*获取未读评论消息 */
-const getCommentList = (userId,pageNum,pageSize) => post('/comment/getCommentList',userId,pageNum,pageSize)
+const getCommentList = (userId, pageNum, pageSize) => post('/comment/getCommentList', userId, pageNum, pageSize)
 /*获取未读关注消息 */
-const getNoReadConcernList = (token) => post('/concern/getNoReadConcernList',token)
+const getNoReadConcernList = (token) => post('/concern/getNoReadConcernList', token)
 /*获取未读点赞消息 */
-const getLikeList = (token) => post('/article_click/getNoReadlikeList',token)
+const getLikeList = (token) => post('/article_click/getNoReadlikeList', token)
 /*获取我的推荐用户*/
 const getMyRecommentUserList = (token, pageNum, pageSize) => post('/user/getMyRecommentUserList', token, pageNum, pageSize)
+/*获取我的消息*/
+const getUserMessageList = (token, status) => post('/message/getUserMessageList', token, status)
+/*获取聊天记录*/
+const getMessageRecord = (token,guestId) => post('/message/getMessageRecord',token,guestId)
 /*管理员-模糊搜索用户*/
 const getUserListByCondition = (name, flag, status, pageNum, pageSize) => post('/user/selectUserListByName', name, flag, status, pageNum, pageSize);
 /*管理员-用户封禁管理*/
-const userManage = (token,currentId,status) => post('/manage/userManage',token,currentId,status);
+const userManage = (token, currentId, status) => post('/manage/userManage', token, currentId, status);
 /*管理员-文章模糊搜索*/
 const getArticleListByCondition = (value, flag, status, pageNum, pageSize) => post('/article/getArticleListByCondition', value, flag, status, pageNum, pageSize);
 /*管理员-文章封禁解封管理*/
-const articleManage = (token,articleId,status) =>post('/manage/articleManage',token,articleId,status)
+const articleManage = (token, articleId, status) => post('/manage/articleManage', token, articleId, status)
 /*管理员-文章审核*/
-const articlePassInfo = (token,articleId,status,msg) =>post('/manage/articlePassInfo',token,articleId,status,msg)
+const articlePassInfo = (token, articleId, status, msg) => post('/manage/articlePassInfo', token, articleId, status, msg)
 export default {
   login,
   register,
@@ -136,6 +140,8 @@ export default {
   getNoReadConcernList,
   getLikeList,
   getMyRecommentUserList,
+  getUserMessageList,
+  getMessageRecord,
   getUserListByCondition,
   userManage,
   getArticleListByCondition,
