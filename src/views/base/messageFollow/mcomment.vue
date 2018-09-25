@@ -14,7 +14,7 @@
                 <el-row>                 
                    <el-col :span="4" style="margin-top:11px;"><small>在文章</small></el-col> 
                    <el-col :span="20">
-                    <div><el-button style="margin-left:-23px;width:100%;font-size: 20px;" type="text" @click="readFullText(item.articleId)">{{item.articleName}}</el-button>  </div>
+                    <div><el-button style="margin-left:-2px;width:100%;font-size: 20px;" type="text" @click="readFullText(item.articleId)">{{item.articleName}}</el-button>  </div>
                   </el-col>               
                 </el-row>
               </el-col>
