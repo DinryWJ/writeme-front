@@ -78,15 +78,23 @@ const routerMap = [{
         title: "消息中心"
       },
       component: () =>
-        import('./views/base/messageFollow/mcomment.vue')
+        import('./views/base/messageFollow/msys.vue')
     }, {
-      path: '/msys',
-      name: 'msys',
+      path: '/mdetail/:id',
+      name: 'mdetail',
       meta: {
         title: "消息中心"
       },
       component: () =>
-        import('./views/base/messageFollow/msys.vue')
+        import('./views/base/messageFollow/mdetail.vue')
+    }, {
+      path: '/mcomment',
+      name: 'mcomment',
+      meta: {
+        title: "消息中心"
+      },
+      component: () =>
+        import('./views/base/messageFollow/mcomment.vue')
     }, {
       path: '/mcollect',
       name: 'msmcollectys',
@@ -244,6 +252,14 @@ const sideRoutes=[{
     },
     component: () =>
       import('./views/admin/userManage.vue')
+  },{
+    path: '/userBanManage',
+    name: 'userBanManage',
+    meta: {
+      title: '封禁管理',
+    },
+    component: () =>
+      import('./views/admin/userBanManage.vue')
   }]
 }]
 const routes = [...routerMap, ...sideRoutes]

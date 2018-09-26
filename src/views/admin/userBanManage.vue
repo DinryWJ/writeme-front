@@ -70,7 +70,7 @@
           <el-button
               size="mini"
               type="danger"
-              @click="handleDelete(scope.$index, scope.row)">封禁</el-button>
+              @click="handleDelete(scope.$index, scope.row)">解封</el-button>
           </template>
       </el-table-column>
   </el-table>
@@ -113,7 +113,7 @@ mounted(){
       axion.getUserListByCondition({
         name:this.input,
         flag:this.select,
-        status: 0,
+        status: 1,
         pageNum:this.pageNum,
         pageSize:10
       }).then(d => {
@@ -139,13 +139,13 @@ mounted(){
       axion.userManage({
         token:this.$cookieStore.getCookie("token"),
         currentId:row.userId,
-        status: 1
+        status: 0
        }).then(d => {
           if (d.data.code != 200) {
             this.$alert(d.data.type, "提示", {});
             return;
           }
-          this.$message('封禁成功');
+          this.$message('解封成功');
           this.getUserListByCondition();
         });
     },

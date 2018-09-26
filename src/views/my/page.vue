@@ -61,7 +61,7 @@
                     </p>
                   </div>
                   <div>
-                    <el-button type="text" icon="el-icon-star-off"><span>1人</span>赞</el-button>
+                    <!-- <el-button type="text" icon="el-icon-star-off"><span>1人</span>赞</el-button> -->
                     <el-button type="text" icon="el-icon-edit-outline" v-show="currentId!=comm.userId" @click="handleQuickReply(comm.user.userName,comm.userId,comm.commentId)">回复</el-button>
                   </div>
                   <ul style="list-style-type:none;">

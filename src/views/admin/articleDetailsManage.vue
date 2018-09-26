@@ -23,14 +23,26 @@
               <el-button icon="el-icon-arrow-left" circle @click="$router.go(-1);"></el-button>
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="通过" placement="top-start" v-show="page.status == 0">
-              <el-button type="success" icon="el-icon-check" circle @click="operate(1);"></el-button>
+              <el-button type="success" icon="el-icon-check" circle  @click="operate(1);"></el-button>
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="不通过" placement="top-start" v-show="page.status == 0">
-              <el-button type="danger" icon="el-icon-close" circle @click="operate(2);"></el-button>
+              <el-button type="danger" icon="el-icon-close" circle  @click="dialogVisible = true"></el-button>
             </el-tooltip>      
           </el-card>
         </div>
       </div>
+
+      <el-dialog
+        title="提示"
+        :visible.sync="dialogVisible"
+        width="30%"
+        :before-close="handleClose">
+        <span>这是一段信息</span>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="operate(2);dialogVisible = false" >确 定</el-button>
+        </span>
+      </el-dialog>
   </el-col>
   <el-col :span="16">
     <div class="grid-content">
@@ -48,6 +60,7 @@ import axion from "@/util/http_url.js"; //接口文件
 export default {
   data() {
     return {
+      dialogVisible: false,
       page: {
         articleId: 0,
         title: "",
@@ -100,7 +113,14 @@ export default {
           }
           this.$router.push('/articleConfirmManage');
         });
-    }
+    },
+    handleClose(done) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            done();
+          })
+          .catch(_ => {});
+      }
   }
 };
 </script>

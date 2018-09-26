@@ -9,7 +9,7 @@
                 <el-row :gutter="20">
                     <el-col :span="6" :offset="18"><div class="grid-content">
                         <el-button type="primary"  @click="dialogVisible = true" v-if="myflag == 0">上传新头像<i class="el-icon-upload el-icon--right"></i></el-button>
-                        <el-button type="danger" round v-if="myflag == 1 && concernStatus==1" @click="addConcern()">加关注</el-button>
+                        <el-button type="danger" round v-if="myflag == 1 && concernStatus==1" @click="addConcern(currentId)">加关注</el-button>
                         <el-button type="info" round v-if="myflag == 1 && concernStatus==0" @click="deleteConcern(currentId)">取消关注</el-button>
                     </div></el-col>
                 </el-row>
@@ -272,7 +272,7 @@ export default {
       } else {
         this.deleteConcern(id);
       }
-    },    
+    },
     handleConcern2(val, id, index) {
       this.concernedList[index].concernerUser.concernStatus = val;
       if (val == 1) {
@@ -292,7 +292,7 @@ export default {
             this.$alert(d.data.type, "提示", {});
             return;
           }
-
+          this.init();
           this.$message("已关注！");
         });
     },
@@ -307,7 +307,7 @@ export default {
             this.$alert(d.data.type, "提示", {});
             return;
           }
-
+          this.init();
           this.$message("已取消关注！");
         });
     },
