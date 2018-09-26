@@ -22,7 +22,7 @@
               <el-submenu class="menuItem" index="7" v-if="loginStatus == true" style="float:right">
                   <template slot="title">我的工作台</template>
                   <el-menu-item index="7-1">我的主页</el-menu-item>
-                  <el-menu-item index="7-2">收藏的文章</el-menu-item>
+                  <el-menu-item index="7-2">点赞的文章</el-menu-item>
                   <el-menu-item index="7-3" v-show="false">喜欢的文章</el-menu-item>
                   <el-menu-item index="7-4">设置</el-menu-item>
                   <el-menu-item index="7-5">退出</el-menu-item>

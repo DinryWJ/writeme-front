@@ -3,33 +3,30 @@
     <el-col :span="4"><div class="grid-content"></div></el-col>
     <el-col :span="16">
         <div class="grid-content">
-            <h1>收藏的文章</h1>
+            <h1>点赞的文章</h1>
             <br/>
             <br/>
-            <div :span="8" v-for="(o, index) in 6" :key="o" :offset="index > 0 ? 2 : 0">
-            <el-card :body-style="{ padding: '0px' }" shadow="hover">
+            <div :span="8" v-for="o in articleClickList" :key="o.articleId">
+            <el-card :body-style="{ padding: '0px' }" shadow="never">
                 <el-row :gutter="20">
                 <el-col :span="16">
                 <div class="grid-content">
                     <div style="padding: 14px;">
-                        <h3>好吃的汉堡</h3>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste optio iure ut odit nihil voluptatibus officiis nemo nesciunt mollitia ea molestiae laboriosam in, quae asperiores beatae quisquam expedita! Cum, fugit!</p>
+                        <h3>{{o.article.title}}</h3>
+                        <p>{{o.article.articlePreview}}</p>
                         <div class="bottom clearfix">
-                        <el-button type="text">鲁迅</el-button>
-                        <el-button type="text" icon="el-icon-message">1</el-button>
-                        <el-button type="text" icon="el-icon-star-on">1</el-button>
-                        <el-button type="text" class="button">阅读全文</el-button>
+                        <el-button type="text" @click="openUser(o.userId)">{{o.user.userName}}</el-button>
+                        <el-button type="text" class="button" @click="openPage(o.articleId)">阅读全文</el-button>
                         </div>
                     </div>
                 </div></el-col>
-                <el-col :span="8"><div class="grid-content"><img :src="logo" class="image" /></div></el-col>
+                <el-col :span="8"><div class="grid-content"><img :src="o.article.coverImg" class="image" /></div></el-col>
                 </el-row>
             </el-card>
             <br/>
             </div>
             <!-- 分页 -->
             <el-pagination
-            @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="currentPage"
             :page-size="10"
@@ -40,27 +37,63 @@
     </el-row>
 </template>
 <script>
+import axion from "@/util/http_url.js"; //接口文件
 import logo from "@/assets/logo.png";
 export default {
   data() {
     return {
       logo: logo,
-      currentPage: 4,
-      total: 120
+      currentPage: 1,
+      total: 0,
+      articleClickList: []
     };
   },
   mounted() {
     this.init();
   },
   methods: {
-    init() {},
+    init() {
+      this.getFavourArticleList();
+    },
+    getFavourArticleList() {
+      axion
+        .getFavourArticleList({
+          token: this.$cookieStore.getCookie("token"),
+          pageNum: this.currentPage,
+          pageSize: 10
+        })
+        .then(d => {
+          if (d.data.code != 200) {
+            this.$alert(d.data.type, "提示", {});
+            return;
+          }
+          this.articleClickList = d.data.data.list;
+          this.total = d.data.data.total;
+        });
+    },
     //分页方法
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
-    },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      this.currentPage = val;
+      this.getFavourArticleList();
     },
+    openUser(id) {
+      const { href } = this.$router.resolve({
+        name: "userPage",
+        params: {
+          id: id
+        }
+      });
+      window.open(href, "_blank");
+    },
+    openPage(id) {
+      const { href } = this.$router.resolve({
+        name: "page",
+        params: {
+          id: id
+        }
+      });
+      window.open(href, "_blank");
+    }
   }
 };
 </script>

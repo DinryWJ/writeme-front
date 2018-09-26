@@ -63,6 +63,8 @@ const likeArticle = (token, articleId) => post('/articleClick/like', token, arti
 const nolikeArticle = (token, articleId) => post('/articleClick/nolike', token, articleId)
 /*点赞状态*/
 const getStarStatus = (token, articleId) => post('/articleClick/judge', token, articleId)
+/*获取点赞的文章*/
+const getFavourArticleList = (token,pageNum,pageSize) => post('/articleClick/getFavourArticleList',token,pageNum,pageSize)
 /*上传图片*/
 const uploadImg = (file) => post2('/upload/upload', file)
 /*通过id获取文章信息*/
@@ -127,6 +129,7 @@ export default {
   nolikeArticle,
   likeArticle,
   getStarStatus,
+  getFavourArticleList,
   uploadImg,
   getArticleById,
   getUserInfoById,

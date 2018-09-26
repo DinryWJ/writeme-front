@@ -41,7 +41,7 @@ export default {
       axion
         .getUserMessageList({
           token: this.$cookieStore.getCookie("token"),
-          status: 0
+          status: 1
         })
         .then(d => {
           if (d.data.code != 200) {
