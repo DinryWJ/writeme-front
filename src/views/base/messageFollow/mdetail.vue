@@ -1,22 +1,35 @@
 <template>
   <div>
     <header>
-      <div style="float:left;">返回消息列表</div>
-      <div style="text-align: center;">与{{userName}}的会话</div>
+      <div style="float:left;"><el-button icon="el-icon-back" round @click="$router.push('/message')">返回消息列表</el-button></div>
+      <div style="text-align: center;">与<el-button type="text" @click="redirect()">{{userName}}</el-button>的会话</div>
     </header>
-    <div v-for="m in messages" :key="m.id">
-      
-      <div v-if="$route.params.id == m.fromUserId" style="float:left;height:40px;">
-        <img style="margin-right: 20px;" :src="m.user.userImage"/>
-        <div class="message1">{{m.message}}</div>
-        <span style="color:#999;font-size:12px;">{{m.createTime}}</span>
+    <div style="margin-top:50px;" v-for="m in messages" :key="m.id">
+      <div v-if="m.user.userId == $route.params.id" class="sender">
+        
+          <div>
+              <img :src="m.user.userImage" height="462" width="427" style="border-radius: 100%;"/>
+          </div>
+          <span class="bottom">{{m.createTime}}</span>
+          <div>
+              <div class="left_triangle"></div>
+              <span>{{m.message}}</span>
+          </div>
+          
       </div>
-      <div v-if="$route.params.id != m.fromUserId" style="float:right;height:40px;">
-        <span style="color:#999;font-size:12px;">{{m.createTime}}</span>
-        <div class="message2">{{m.message}}</div>
-        <img style="margin-left: 20px;" :src="m.user.userImage"/>
+      <!-- Right -->
+      <div v-if="m.user.userId != $route.params.id" class="receiver">
+         
+          <div>
+              <img :src="m.user.userImage" height="640" width="640" style="border-radius: 100%;"/>
+          </div>
+          
+          <div>
+              <div class="right_triangle"></div>
+              <span>{{m.message}}</span>
+          </div>
+         <span class="bottom" style="float:right;">{{m.createTime}}</span>
       </div>
-      <div style="height:50px;"></div>
     </div>
     
 
@@ -59,54 +72,80 @@ export default {
           }
           this.messages = d.data.data.list;
         });
+    },
+    redirect(){
+      const { href } = this.$router.resolve({
+        name: "userPage",
+        params: {
+          id: this.$route.params.id
+        }
+      });
+      window.open(href, "_blank");
     }
   }
 };
 </script>
 
 <style scoped>
-img {
-  width: 40px;
-  height: 40px;
-  border-radius: 100%;
-}
-.message1,.message2 {
-  display: inline-block;
-  height: 40px;
-  background-color: green;
-  border-bottom-color:green;/*为了给after伪元素自动继承*/
-  color: #fff;
-  font-size: 12px;
-  font-family: Arial;
+.bottom {
+  color: #999;
   line-height: 40px;
-  padding: 5px 12px 5px 12px;
-  box-sizing: border-box;
-  border-radius: 6px;
-  position: relative;
-  word-break: break-all;
-  padding: 0 10px;
+  font-size: 12px;
 }
-.message1::before {
-  content: '';
-  width: 10px; 
-  height: 10px;
-  background-color: inherit;
-  left: -5px; /*向左侧外部延伸箭头box的一半宽度*/
-  position: absolute;
-  transform: rotate(45deg); /*旋转45度*/
-  top:50%; /*箭头在数值方向上居中*/
-  margin-top: -5px;
+/* bubble style */
+.sender {
+  clear: both;
 }
-.message2::before {
-  content: '';
-  width: 10px; 
-  height: 10px;
-  background-color: inherit;
-  right: -5px; /*向左侧外部延伸箭头box的一半宽度*/
-  position: absolute;
-  transform: rotate(45deg); /*旋转45度*/
-  top:50%; /*箭头在数值方向上居中*/
-  margin-top: -5px;
+.sender div:nth-of-type(1) {
+  float: left;
+}
+.sender div:nth-of-type(2) {
+  background-color: aquamarine;
+  float: left;
+  margin: 0 20px 10px 15px;
+  padding: 10px 10px 10px 0px;
+  border-radius: 7px;
 }
 
+.receiver div:first-child img,
+.sender div:first-child img {
+  width: 50px;
+  height: 50px;
+}
+
+.receiver {
+  clear: both;
+}
+.receiver div:nth-child(1) {
+  float: right;
+}
+.receiver div:nth-of-type(2) {
+  float: right;
+  background-color: gold;
+  margin: 0 10px 10px 20px;
+  padding: 10px 0px 10px 10px;
+  border-radius: 7px;
+}
+
+.left_triangle {
+  height: 0px;
+  width: 0px;
+  border-width: 8px;
+  border-style: solid;
+  border-color: transparent aquamarine transparent transparent;
+  position: relative;
+  left: -16px;
+  top: 3px;
+}
+
+.right_triangle {
+  height: 0px;
+  width: 0px;
+  border-width: 8px;
+  border-style: solid;
+  border-color: transparent transparent transparent gold;
+  position: relative;
+  right: -16px;
+  top: 3px;
+}
 </style>

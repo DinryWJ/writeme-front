@@ -67,6 +67,8 @@ const uploadImg = (file) => post2('/upload/upload', file)
 const getArticleById = (articleId) => post('/article/getArticleById', articleId)
 /*通过Id获取用户信息*/
 const getUserInfoById = (userId) => post('/user/getUserInfoById', userId)
+/*通过token获取用户信息*/
+const getUserByToken = (token) => post('/user/getUserByToken', token)
 /*通过status获取用户文章列表*/
 const getArticleListByUserId = (userId, status, pageNum, pageSize) => post('/article/getArticleListByUserId', userId, status, pageNum, pageSize);
 /*通过token获取id信息*/
@@ -125,6 +127,7 @@ export default {
   uploadImg,
   getArticleById,
   getUserInfoById,
+  getUserByToken,
   getArticleListByUserId,
   getUserIdByToken,
   addComment,

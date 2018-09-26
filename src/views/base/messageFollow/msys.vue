@@ -24,11 +24,9 @@
 // @ is an alias to /src
 // import HelloWorld from '@/components/HelloWorld.vue'
 import axion from "@/util/http_url.js"; //接口文件
-import logo from "@/assets/logo.png";
 export default {
   data() {
     return {
-      pic: logo,
       message:[]
     };
   },

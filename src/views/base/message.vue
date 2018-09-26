@@ -31,38 +31,35 @@
 </template>
 <script>
 export default {
-   data() {
-    return {
-    };
+  data() {
+    return {};
   },
-  mounted(){
-
-  },
-  methods:{
-      go(url){
-          this.$router.push(url);
-      }
-  }   
-}
+  mounted() {},
+  methods: {
+    go(url) {
+      this.$router.push(url);
+    }
+  }
+};
 </script>
 
 <style scoped>
-.el-aside,.el-main{
- overflow: hidden;
+.el-aside,
+.el-main {
+  overflow: hidden;
 }
-    ul,li{
-       padding-top: 15px;
-        margin:0;
-
-    }
-    .menu{
-        list-style:none;
-        width: 100%;
-    }
-    .asideBtn{
-        height: 50px;
-        width: 150px;
-        border: none;
-    }
-    
+ul,
+li {
+  padding-top: 15px;
+  margin: 0;
+}
+.menu {
+  list-style: none;
+  width: 100%;
+}
+.asideBtn {
+  height: 50px;
+  width: 150px;
+  border: none;
+}
 </style>
