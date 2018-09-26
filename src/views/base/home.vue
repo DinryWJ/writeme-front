@@ -29,7 +29,7 @@
                     </div>
                   </div>
               </div></el-col>
-              <el-col :span="8"><div class="grid-content"><img :src="pic" class="image" /></div></el-col>
+              <el-col :span="8"><div class="grid-content"><img :src="item.coverImg" class="image" /></div></el-col>
             </el-row>
           </el-card>
           <br/>
