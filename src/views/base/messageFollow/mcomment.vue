@@ -59,7 +59,7 @@ export default{
     };
   },
   mounted() {
-     this.currentId=this.$cookieStore.getCookie("userId");
+    this.currentId=this.$cookieStore.getCookie("userId");
     this.polling();
   },
   methods:{

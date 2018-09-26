@@ -141,7 +141,7 @@ export default {
       //TODO 搜索
       // this.$message('正在搜索\"'+searchKey+'\"的值');
       if (searchKey.length > 0) {
-        this.$router.push("/" + searchKey + "/search");
+        this.$router.push("/" + searchKey + "/search/article");
       }
       this.isdesable = false;
     },

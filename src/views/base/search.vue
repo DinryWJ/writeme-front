@@ -1,9 +1,9 @@
 <template>
     <el-container>
-    <el-aside width="300px">    
+    <el-aside width="200px">    
     <ul class="menu">
-        <li class="active"><el-button icon="el-icon-document" class="asideBtn" @click="go('/'+$route.params.searchkey+'/search/article')">推荐文章</el-button></li>
-        <li class=""><el-button icon="el-icon-service" class="asideBtn" @click="go('/'+$route.params.searchkey+'/search/user')">推荐用户</el-button></li>
+        <li class="active"><el-button icon="el-icon-document" class="asideBtn" @click="go('/'+$route.params.searchkey+'/search/article')">搜索文章</el-button></li>
+        <li class=""><el-button icon="el-icon-service" class="asideBtn" @click="go('/'+$route.params.searchkey+'/search/user')">搜索用户</el-button></li>
     </ul>
     </el-aside>
     <el-container>
