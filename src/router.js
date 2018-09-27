@@ -49,16 +49,16 @@ const routerMap = [{
     },
     component: follow,
     children: [{
+    //   path: '/follow',
+    //   name: "follow",
+    //   meta: {
+    //     title: "推荐文章"
+    //   },
+    //   component: () =>
+    //     import('./views/base/follow/farticle.vue')
+    // }, {
       path: '/follow',
       name: "follow",
-      meta: {
-        title: "推荐文章"
-      },
-      component: () =>
-        import('./views/base/follow/farticle.vue')
-    }, {
-      path: '/fuser',
-      name: "fuser",
       meta: {
         title: "推荐用户"
       },

@@ -64,7 +64,7 @@ const nolikeArticle = (token, articleId) => post('/articleClick/nolike', token, 
 /*点赞状态*/
 const getStarStatus = (token, articleId) => post('/articleClick/judge', token, articleId)
 /*获取点赞的文章*/
-const getFavourArticleList = (token,pageNum,pageSize) => post('/articleClick/getFavourArticleList',token,pageNum,pageSize)
+const getFavourArticleList = (token, pageNum, pageSize) => post('/articleClick/getFavourArticleList', token, pageNum, pageSize)
 /*上传图片*/
 const uploadImg = (file) => post2('/upload/upload', file)
 /*通过id获取文章信息*/
@@ -106,7 +106,7 @@ const getMyRecommentUserList = (token, pageNum, pageSize) => post('/user/getMyRe
 /*获取我的消息*/
 const getUserMessageList = (token, status) => post('/message/getUserMessageList', token, status)
 /*获取聊天记录*/
-const getMessageRecord = (token,guestId) => post('/message/getMessageRecord',token,guestId)
+const getMessageRecord = (token, guestId) => post('/message/getMessageRecord', token, guestId)
 /*管理员-模糊搜索用户*/
 const getUserListByCondition = (name, flag, status, pageNum, pageSize) => post('/user/selectUserListByName', name, flag, status, pageNum, pageSize);
 /*管理员-用户封禁管理*/
@@ -117,6 +117,18 @@ const getArticleListByCondition = (value, flag, status, pageNum, pageSize) => po
 const articleManage = (token, articleId, status) => post('/manage/articleManage', token, articleId, status)
 /*管理员-文章审核*/
 const articlePassInfo = (token, articleId, status, msg) => post('/manage/articlePassInfo', token, articleId, status, msg)
+/*个人设置*/
+const userSetting = (token, username, sex, desc) => post('/account/userSetting', token, username, sex, desc)
+/*修改密码*/
+const modifyPwd = (token, oldPwd, newPwd, rePwd) => post('/account/modifyPwd', token, oldPwd, newPwd, rePwd)
+/*修改头像*/
+const modifyPic = (token, imageUrl) => post('/account/modifyPic', token, imageUrl)
+/*新增轮播图*/
+const addCarousel = (token, tag, address, pic) => post('/carousel/addCarousel', token, tag, address, pic)
+/*获取轮播图*/
+const getCarouselList = (pageNum, pageSize) => post('/carousel/getCarouselList', pageNum, pageSize)
+/*通过id删除轮播图*/
+const delCarousel = (token, id) => post('/carousel/delCarousel', token, id)
 export default {
   login,
   register,
@@ -155,5 +167,11 @@ export default {
   userManage,
   getArticleListByCondition,
   articleManage,
-  articlePassInfo
+  articlePassInfo,
+  userSetting,
+  modifyPwd,
+  modifyPic,
+  addCarousel,
+  getCarouselList,
+  delCarousel
 }

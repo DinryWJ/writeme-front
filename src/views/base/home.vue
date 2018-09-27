@@ -48,8 +48,8 @@
       <el-col :span="8"><div class="grid-content" >
           <template>
             <el-carousel :interval="5000" arrow="always">
-              <el-carousel-item v-for="item in 4" :key="item">
-                <h3>{{ item }}</h3>
+              <el-carousel-item v-for="item in carouselList" :key="item.id">
+                <img :src="item.pic" width="100%" height="100%" @click="open(item.address)"/>
               </el-carousel-item>
             </el-carousel>
           </template>
@@ -94,12 +94,12 @@ export default {
       currentDate: new Date(),
       loginStatus: false,
       dialogVisible: false,
-      textarea:'',
-
-      currentId:0,
-      list:[],
+      textarea: "",
+      carouselList: [],
+      currentId: 0,
+      list: [],
       pageNum: 1,
-      total:0
+      total: 0
     };
   },
   mounted() {
@@ -110,12 +110,13 @@ export default {
       let name = this.$cookieStore.getCookie("token");
       if (name != null) {
         this.loginStatus = true;
-         this.getDate();
+        this.getDate();
       } else {
         this.loginStatus = false;
       }
+      this.getCarouselList();
     },
-     getDate() {
+    getDate() {
       axion
         .getMyRecommentArticleList({
           userId: this.$cookieStore.getCookie("userId"),
@@ -132,11 +133,11 @@ export default {
           this.currentPage = d.data.data.pageNum;
         });
     },
-      handleCurrentChange(val) {
-        console.log(`每页 ${val} 条`);
-        this.pageNum=val;
-        this.getDate();
-      },
+    handleCurrentChange(val) {
+      console.log(`每页 ${val} 条`);
+      this.pageNum = val;
+      this.getDate();
+    },
     readFullText(articleId) {
       const { href } = this.$router.resolve({
         name: "page",
@@ -146,11 +147,32 @@ export default {
       });
       window.open(href, "_blank");
     },
-    dowrite(){
-      this.$router.push('/write');
+    dowrite() {
+      this.$router.push("/write");
     },
-    domind(){
-
+    domind() {},
+    getCarouselList() {
+      axion
+        .getCarouselList({
+          pageNum: 1,
+          pageSize: 4
+        })
+        .then(d => {
+          if (d.data.code != 200) {
+            this.$alert(d.data.type, "提示", {});
+            return;
+          }
+          this.carouselList = d.data.data.list;
+        });
+    },
+    open(address) {
+      const { href } = this.$router.resolve({
+        name: "page",
+        params: {
+          id: address
+        }
+      });
+      window.open(href, "_blank");
     }
   }
 };

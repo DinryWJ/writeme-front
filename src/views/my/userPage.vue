@@ -471,7 +471,22 @@ export default {
       }
       return isJPG && isLt2M;
     },
-    confirmUpload() {},
+    confirmUpload() {
+      axion
+        .modifyPic({
+          token: this.$cookieStore.getCookie("token"),
+          imageUrl: this.imageUrl
+        })
+        .then(d => {
+          if (d.data.code != 200) {
+            this.$alert(d.data.type, "提示", {});
+            return;
+          }
+          this.$message("修改成功");
+          this.dialogVisible =false;
+          this.$router.go(0);
+        });
+    },
     gotoUserPage(id) {
       const { href } = this.$router.resolve({
         name: "userPage",
