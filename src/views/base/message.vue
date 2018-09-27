@@ -8,9 +8,9 @@
             </el-badge>
         </li> -->
         <li class="active">
-              <el-badge :value="12" :max="99" class="item">
+              <!-- <el-badge :value="12" :max="99" class="item"> -->
             <el-button icon="el-icon-service" class="asideBtn" @click="go('/message')">我的消息</el-button>
-              </el-badge>
+              <!-- </el-badge> -->
         </li>
         <!-- <li class="">
               <el-badge :value="12" :max="99" class="item">
@@ -59,7 +59,7 @@ li {
 }
 .asideBtn {
   height: 50px;
-  width: 150px;
+  width: 200px;
   border: none;
 }
 </style>
