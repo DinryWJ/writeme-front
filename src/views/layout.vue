@@ -8,7 +8,7 @@
           <nav>
               <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect" >
               
-              <el-menu-item class="menuItem" index="1"><img alt="Vue logo" :src="icon" style="height:100%" /></el-menu-item>
+              <el-menu-item class="menuItem" index="1"><img alt="Vue logo" :src="icon" style="height:100%;margin-bottom: 4px;" /></el-menu-item>
               <el-menu-item class="menuItem" index="2" v-if="loginStatus == true">推荐</el-menu-item>
               <el-menu-item class="menuItem" index="3" v-if="loginStatus == true">消息</el-menu-item>
               <el-menu-item class="menuItem" index="4">
