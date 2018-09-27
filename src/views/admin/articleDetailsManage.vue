@@ -6,7 +6,7 @@
         <h3>作者</h3>
         <div style="padding: 20px;">
             <div style="float:left;height:50px;margin-right:10px;">
-            <img :src="page.author.userImage" style="height:100%;border-radius:50px;" />
+            <img :src="page.author.userImage" style="height:50px;width:50px;border-radius:50px;" />
           </div>
           <div>
             <span>{{page.author.userName}}</span><el-button round class="button" v-show="page.concernStatus==0 &&flag ==0" @click="handleConcern(1)">关注TA</el-button><el-button round class="button" v-show="page.concernStatus==1 &&flag ==0" @click="handleConcern(0)">取消关注</el-button>
@@ -33,15 +33,28 @@
       </div>
 
       <el-dialog
-        title="提示"
+        title="反馈信息"
         :visible.sync="dialogVisible"
-        width="30%"
-        :before-close="handleClose">
-        <span>这是一段信息</span>
-        <span slot="footer" class="dialog-footer">
+        width="30%">
+        <div>错误类型
+          <template>
+            <el-select v-model="category" placeholder="请选择">
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </template>
+        </div>
+        <div>补充说明
+          <el-input v-model="details" style="width:400px;margin:20px 0;"></el-input>
+        </div>
+        <div slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="operate(2);dialogVisible = false" >确 定</el-button>
-        </span>
+          <el-button type="primary" @click="commit()">确 定</el-button>
+        </div>
       </el-dialog>
   </el-col>
   <el-col :span="16">
@@ -73,7 +86,31 @@ export default {
           userName: "",
           userImage: ""
         }
-      }
+      },
+      options: [
+        {
+          value: "政治敏感",
+          label: "政治敏感"
+        },
+        {
+          value: "色情赌博内容",
+          label: "色情赌博内容"
+        },
+        {
+          value: "欺诈虚假广告",
+          label: "欺诈虚假广告"
+        },
+        {
+          value: "内容侵权",
+          label: "内容侵权"
+        },
+        {
+          value: "其他",
+          label: "其他"
+        }
+      ],
+      category: "",
+      details: ""
     };
   },
   mounted() {
@@ -92,9 +129,9 @@ export default {
             return;
           }
           this.page = d.data.data;
-          if(this.page.status == 1 || this.page.status == 2){
-            this.$alert('文章已审核');
-            this.$router.push('/articleConfirmManage');
+          if (this.page.status == 1 || this.page.status == 2) {
+            this.$alert("文章已审核");
+            this.$router.push("/articleConfirmManage");
           }
         });
     },
@@ -111,16 +148,24 @@ export default {
             this.$alert(d.data.type, "提示", {});
             return;
           }
-          this.$router.push('/articleConfirmManage');
+          this.$router.push("/articleConfirmManage");
         });
     },
-    handleClose(done) {
-        this.$confirm('确认关闭？')
-          .then(_ => {
-            done();
-          })
-          .catch(_ => {});
-      }
+    commit() {
+      axion
+        .sendMessage({
+          token: this.$cookieStore.getCookie("token"),
+          toUserId: this.page.author.userId,
+          message: '你的文章《'+this.page.title+'》审核未通过,原因为:\n'+this.category + " " + this.details +'请重新编辑并发布'
+        })
+        .then(d => {
+          if (d.data.code != 200) {
+            this.$alert(d.data.type, "提示", {});
+            return;
+          }
+          this.operate(2);
+        });
+    }
   }
 };
 </script>

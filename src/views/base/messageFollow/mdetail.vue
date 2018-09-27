@@ -11,7 +11,7 @@
               <img :src="m.user.userImage" height="462" width="427" style="border-radius: 100%;"/>
           </div>
           <span class="bottom">{{m.createTime}}</span>
-          <div>
+          <div style="max-width:300px">
               <div class="left_triangle"></div>
               <span>{{m.message}}</span>
           </div>
@@ -24,7 +24,7 @@
               <img :src="m.user.userImage" height="640" width="640" style="border-radius: 100%;"/>
           </div>
           
-          <div>
+          <div style="max-width:300px">
               <div class="right_triangle"></div>
               <span>{{m.message}}</span>
           </div>
@@ -70,7 +70,14 @@ export default {
             this.$alert(d.data.type, "提示", {});
             return;
           }
-          this.messages = d.data.data.list;
+          if(d.data.data.list.length<4){
+            this.messages = d.data.data.list;
+          }else{
+            for(let i=d.data.data.list.length-4;i<d.data.data.list.length;i++){
+              this.messages.push(d.data.data.list[i]);
+            }
+          }
+          
         });
     },
     redirect(){

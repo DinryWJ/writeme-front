@@ -103,6 +103,8 @@ const getNoReadConcernList = (token) => post('/concern/getNoReadConcernList', to
 const getLikeList = (token) => post('/article_click/getNoReadlikeList', token)
 /*获取我的推荐用户*/
 const getMyRecommentUserList = (token, pageNum, pageSize) => post('/user/getMyRecommentUserList', token, pageNum, pageSize)
+/*发送消息*/
+const sendMessage =(token,toUserId,message)=>post('/message/sendMessage',token,toUserId,message)
 /*获取我的消息*/
 const getUserMessageList = (token, status) => post('/message/getUserMessageList', token, status)
 /*获取聊天记录*/
@@ -161,6 +163,7 @@ export default {
   getNoReadConcernList,
   getLikeList,
   getMyRecommentUserList,
+  sendMessage,
   getUserMessageList,
   getMessageRecord,
   getUserListByCondition,

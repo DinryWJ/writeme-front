@@ -96,7 +96,8 @@ export default {
   float: right;
 }
 .image {
-  width: 100%;
+  width: 50px;
+  height: 50px;
   border-radius: 100%;
   display: block;
   margin: 0 auto;

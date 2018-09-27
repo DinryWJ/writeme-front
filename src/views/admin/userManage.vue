@@ -83,6 +83,19 @@
       :total="total">
       </el-pagination>
   </section>
+
+  <el-dialog
+  title="发信息"
+  :visible.sync="dialogVisible"
+  width="30%">
+  <div>
+    <textarea v-model="message" cols="30" rows="10" style="width: 100%;"></textarea>
+  </div>
+  <div slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="sendMessage()">确 定</el-button>
+  </div>
+</el-dialog>
 </div>
 
 </template>
@@ -98,7 +111,10 @@ export default {
       total: 0,
       input:'',
       select:'1',
-      loading:false
+      loading:false,
+      message:'',
+      dialogVisible:false,
+      tempId:0
     };
   },
 mounted(){
@@ -133,7 +149,24 @@ mounted(){
       this.multipleSelection = val;
     },
     handleEdit(index, row) {
-      console.log(index, row);
+      this.dialogVisible=true;
+      this.tempId = row.userId;
+    },
+    sendMessage(){
+      axion
+        .sendMessage({
+          token: this.$cookieStore.getCookie("token"),
+          toUserId: this.tempId,
+          message: this.message
+        })
+        .then(d => {
+          if (d.data.code != 200) {
+            this.$alert(d.data.type, "提示", {});
+            return;
+          }
+          this.$message('发送成功');
+          this.dialogVisible = false;
+        });
     },
     handleDelete(index, row) {
       axion.userManage({
