@@ -61,8 +61,9 @@ export default {
       getDate() {
       axion
         .getUserListByCondition({
-         value: this.$route.params.searchkey,
+         name: this.$route.params.searchkey,
          flag:2,
+         status:0,
          pageNum: this.pageNum,
          pageSize: 5
         })
@@ -73,7 +74,7 @@ export default {
           }
           this.list = d.data.data.list;
           this.total = d.data.data.total;
-          this.currentPage = d.data.data.pageNum;
+          this.pageNum = d.data.data.pageNum;
         });
     },
     //分页方法

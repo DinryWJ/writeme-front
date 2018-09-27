@@ -1,36 +1,37 @@
 <template>
     <el-row :gutter="20">
-    <el-col :span="24">
+    <el-col :span="4"><div class="grid-content"></div></el-col>
+    <el-col :span="16">
         <div class="grid-content">       
-             <div :span="8" v-for="item in list" :key="item.articleId">
-            <el-card :body-style="{ padding: '0px' }" shadow="hover">
-                <el-row :gutter="20">
-                <el-col :span="16">
-                <div class="grid-content">
-                    <div style="padding: 14px;">
-                        <h3>{{item.title}}</h3>
-                        <p>{{item.content}}</p>
-                        <div class="bottom clearfix">
-                        <el-button type="text" @click="gotoUserPage(item.userId)">{{item.author.userName}}</el-button>
-                        <el-button type="text" icon="el-icon-message">1</el-button>
-                        <el-button type="text" icon="el-icon-star-on">1</el-button>
-                        <el-button type="text" class="button" @click="readFullText(item.articleId)">阅读全文</el-button>
-                        </div>
+        <div :span="8" v-for="item in list" :key="item.userId" >
+          <el-card :body-style="{ padding: '0px' }" shadow="hover">
+            <el-row :gutter="20">
+              <el-col :span="16">
+              <div class="grid-content">
+                  <div style="padding: 14px;">
+                    <h3>{{item.title}}</h3>
+                    <p>{{item.articlePreview}}</p>
+                    <div class="bottom clearfix">
+                      <el-button type="text">{{item.author.userName}}</el-button>
+                      <el-button type="text" icon="el-icon-message">1</el-button>
+                      <el-button type="text" icon="el-icon-star-on">1</el-button>
+                      <el-button type="text" class="button" @click="readFullText(item.articleId)">阅读全文</el-button>
                     </div>
-                </div></el-col>
-                <el-col :span="8"><div class="grid-content"><img :src="item.coverImg" class="image" /></div></el-col>
-                </el-row>
-            </el-card>
-            <br/>
-            </div>
-            <!-- 分页 -->
-            <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="currentPage"
-            :page-size="10"
-            :total="total">
-            </el-pagination>
+                  </div>
+              </div></el-col>
+              <el-col :span="8"><div class="grid-content"><img :src="item.coverImg" class="image" /></div></el-col>
+            </el-row>
+          </el-card>
+          <br/>
+        </div>
+        <!-- 分页 -->
+        <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="pageNum"
+        :page-size="10"
+        :total="total">
+        </el-pagination>
         </div></el-col>
     <el-col :span="4"><div class="grid-content"></div></el-col>
     </el-row>
@@ -69,7 +70,7 @@ export default {
           }
           this.list = d.data.data.list;
           this.total = d.data.data.total;
-          this.currentPage = d.data.data.pageNum;
+          this.pageNum = d.data.data.pageNum;
         });
     },
     //分页方法
@@ -103,6 +104,58 @@ export default {
 </script>
 
 <style scoped>
+/* 卡片 */
+.time {
+  font-size: 13px;
+  color: #999;
+}
+.bottom {
+  margin-top: 13px;
+  line-height: 12px;
+}
+.button {
+  padding: 0;
+  float: right;
+}
+.image {
+  height: 150px;
+  width: 150px;
+  padding-top: 30px;
+  display: block;
+  margin: 0 auto;
+}
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+}
+.clearfix:after {
+  clear: both;
+}
+p {
+  overflow: hidden;
+  /* white-space: nowrap; */
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 2;
+  word-break: break-all;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+}
+/* 走马灯 */
+.el-carousel__item h3 {
+  color: #475669;
+  font-size: 18px;
+  opacity: 0.75;
+  line-height: 300px;
+  margin: 0;
+}
+.el-carousel__item:nth-child(2n) {
+  background-color: #99a9bf;
+}
+.el-carousel__item:nth-child(2n + 1) {
+  background-color: #d3dce6;
+}
+/* 栅格 */
 .el-row {
   margin-bottom: 20px;
   &:last-child {
@@ -128,39 +181,5 @@ export default {
 .row-bg {
   padding: 10px 0;
   background-color: #f9fafc;
-}
-
-/* 卡片 */
-.time {
-  font-size: 13px;
-  color: #999;
-}
-
-.bottom {
-  margin-top: 13px;
-  line-height: 12px;
-}
-
-.button {
-  padding: 0;
-  float: right;
-}
-
-.image {
-  height: 150px;
-  width: 150px;
-  padding-top: 30px;
-  display: block;
-  margin: 0 auto;
-}
-
-.clearfix:before,
-.clearfix:after {
-  display: table;
-  content: "";
-}
-
-.clearfix:after {
-  clear: both;
 }
 </style>

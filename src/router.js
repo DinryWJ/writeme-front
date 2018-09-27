@@ -20,28 +20,22 @@ const routerMap = [{
     component: () =>
       import('./views/base/home.vue')
   }, {
-    path: '/:searchkey/search',
+    path: '/:searchkey/search/article',
+    name: "searcharticle",
     meta: {
-      title: "搜索"
+      title: "搜索文章"
     },
-    component: search,
-    children: [{
-      path: '/:searchkey/search/article',
-      name: "searcharticle",
-      meta: {
-        title: "搜索文章"
-      },
-      component: () =>
-        import('./views/base/search/search.vue')
-    },{
-      path: '/:searchkey/search/user',
-      name: "searchuser",
-      meta: {
-        title: "搜索用户"
-      },
-      component: () =>
-        import('./views/base/search/suser.vue')
-    }]
+    component: () =>
+      import('./views/base/search/search.vue')
+  }, {
+    path: '/:searchkey/search/user',
+    name: "searchuser",
+    meta: {
+      title: "搜索用户"
+    },
+    component: () =>
+      import('./views/base/search/suser.vue')
+
   }, {
     path: '/follow',
     meta: {
@@ -49,14 +43,14 @@ const routerMap = [{
     },
     component: follow,
     children: [{
-    //   path: '/follow',
-    //   name: "follow",
-    //   meta: {
-    //     title: "推荐文章"
-    //   },
-    //   component: () =>
-    //     import('./views/base/follow/farticle.vue')
-    // }, {
+      //   path: '/follow',
+      //   name: "follow",
+      //   meta: {
+      //     title: "推荐文章"
+      //   },
+      //   component: () =>
+      //     import('./views/base/follow/farticle.vue')
+      // }, {
       path: '/follow',
       name: "follow",
       meta: {
@@ -190,7 +184,7 @@ const routerMap = [{
   redirect: '/'
 }]
 
-const sideRoutes=[{
+const sideRoutes = [{
   path: "/admin/login",
   name: "adminlogin",
   meta: {
@@ -198,7 +192,7 @@ const sideRoutes=[{
   },
   component: () =>
     import('./views/admin/login.vue')
-},{
+}, {
   path: '/manage',
   meta: {
     title: "管理"
@@ -220,21 +214,21 @@ const sideRoutes=[{
     },
     component: () =>
       import('./views/admin/articleListManage.vue')
-  },{
+  }, {
     path: '/articleConfirmManage',
     name: 'articleConfirmManage',
-    meta:{
-      title:'文章审核',
+    meta: {
+      title: '文章审核',
     },
-    component:() => 
+    component: () =>
       import('./views/admin/articleConfirmManage.vue')
-  },{
+  }, {
     path: '/articleBanListManage',
     name: 'articleBanListManage',
-    meta:{
-      title:'文章封禁管理',
+    meta: {
+      title: '文章封禁管理',
     },
-    component:() => 
+    component: () =>
       import('./views/admin/articleBanListManage.vue')
   }, {
     path: '/articleDetails/:id',
@@ -252,7 +246,7 @@ const sideRoutes=[{
     },
     component: () =>
       import('./views/admin/userManage.vue')
-  },{
+  }, {
     path: '/userBanManage',
     name: 'userBanManage',
     meta: {
@@ -267,4 +261,4 @@ var router = new Router({
   routes
 })
 export default router;
-export {sideRoutes}
+export { sideRoutes }

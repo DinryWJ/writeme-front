@@ -12,8 +12,15 @@
               <el-menu-item class="menuItem" index="2" v-if="loginStatus == true">推荐</el-menu-item>
               <el-menu-item class="menuItem" index="3" v-if="loginStatus == true">消息</el-menu-item>
               <el-menu-item class="menuItem" index="4">
-                  <el-input placeholder="请输入内容" v-model="searchKey" class="input-with-select">
+                  <!-- <el-input placeholder="请输入内容" v-model="searchKey" class="input-with-select">
                       <el-button slot="append" icon="el-icon-search" circle @click="search(searchKey)"></el-button>
+                  </el-input> -->
+                  <el-input placeholder="请输入内容" v-model="searchKey" class="input-with-select">
+                    <el-select v-model="select" slot="prepend" placeholder="请选择" style="width:100px;">
+                      <el-option label="文章" value="1"></el-option>
+                      <el-option label="用户" value="2"></el-option>
+                    </el-select>
+                    <el-button slot="append" icon="el-icon-search" @click="search(searchKey)"></el-button>
                   </el-input>
               </el-menu-item>
 
@@ -96,6 +103,7 @@ export default {
   data() {
     return {
       icon: logo,
+      select: "1",
       path: [
         "",
         "/",
@@ -107,11 +115,10 @@ export default {
         "",
         "/write"
       ],
-      mypath: ["","", "/myCollection", "/myLike", "/setting"],
+      mypath: ["", "", "/myCollection", "/myLike", "/setting"],
       activeIndex: "1",
       loginStatus: false,
       searchKey: "",
-      isdesable: false,
       dialogVisible: false
     };
   },
@@ -123,27 +130,31 @@ export default {
       let currenttoken = this.$cookieStore.getCookie("token");
       if (currenttoken != null) {
         this.loginStatus = true;
-        axion.getUserIdByToken({
-          token:currenttoken
-        }).then(d => {
-          if (d.data.code != 200) {
-            this.$alert(d.data.type, "提示", {});
-            return;
-          }
-          this.mypath[1] = "/"+d.data.data+"/userPage"
-        });
+        axion
+          .getUserIdByToken({
+            token: currenttoken
+          })
+          .then(d => {
+            if (d.data.code != 200) {
+              this.$alert(d.data.type, "提示", {});
+              return;
+            }
+            this.mypath[1] = "/" + d.data.data + "/userPage";
+          });
       } else {
         this.loginStatus = false;
       }
-      //   this.isdesable = false;
     },
     search(searchKey) {
       //TODO 搜索
       // this.$message('正在搜索\"'+searchKey+'\"的值');
       if (searchKey.length > 0) {
-        this.$router.push("/" + searchKey + "/search/article");
+        if (this.select == 1) {
+          this.$router.push("/" + searchKey + "/search/article");
+        } else {
+          this.$router.push("/" + searchKey + "/search/user");
+        }
       }
-      this.isdesable = false;
     },
     handleSelect(key, keyPath) {
       //console.log(key);

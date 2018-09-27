@@ -7,7 +7,7 @@
 
                 <div style="padding: 20px;">
                   <div style="float:left;height:50px;margin-right:10px;">
-                    <img :src="page.author.userImage" style="height:100%;border-radius:50px;" />
+                    <img :src="page.author.userImage" style="height:50px;width:50px;border-radius:50px;" />
                   </div>
                   <div>
                     <span>{{page.author.userName}}</span><el-button round class="button" v-show="page.concernStatus==0 &&flag ==0" @click="handleConcern(1)">关注TA</el-button><el-button round class="button" v-show="page.concernStatus==1 &&flag ==0" @click="handleConcern(0)">取消关注</el-button>
