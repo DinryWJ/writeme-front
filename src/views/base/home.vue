@@ -120,6 +120,7 @@ export default {
       axion
         .getMyRecommentArticleList({
           userId: this.$cookieStore.getCookie("userId"),
+          status:1,
           pageNum: this.pageNum,
           pageSize: 5
         })

@@ -102,7 +102,7 @@ const getNoReadConcernList = (token) => post('/concern/getNoReadConcernList', to
 /*获取未读点赞消息 */
 const getLikeList = (token) => post('/article_click/getNoReadlikeList', token)
 /*获取我的推荐用户*/
-const getMyRecommentUserList = (token, pageNum, pageSize) => post('/user/getMyRecommentUserList', token, pageNum, pageSize)
+const getMyRecommentUserList = (token, status,pageNum, pageSize) => post('/user/getMyRecommentUserList', token,status, pageNum, pageSize)
 /*发送消息*/
 const sendMessage =(token,toUserId,message)=>post('/message/sendMessage',token,toUserId,message)
 /*获取我的消息*/
